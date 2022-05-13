@@ -3,12 +3,37 @@ import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.Color;
 
+/**
+ * Class for creating a new game.
+ * 
+ * @author Daniel O Sousa
+ */
 public class Game extends JFrame {
 
+    /**
+     * The {@code JPanel} for displaying the game.
+     */
     public JPanel gamePanel = new JPanel();
+
+    /**
+     * {@code GameFlow} for controlling the game frame rate.
+     */
     public GameFlow gameFlow;
+
+    /**
+     * The size of the game's tiles.
+     */
     public int tileSize;
 
+    /**
+     * Creates a new {@code Game} with the specified title {@code title},
+     * width {@code width}, height {@code height} and FPS {@code fps}.
+     * 
+     * @param title The title of the game.
+     * @param width The game's width.
+     * @param height The game's height.
+     * @param fps The fps of the game.
+     */
     public Game(String title, int width, int height, int fps) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle(title);
@@ -94,14 +119,29 @@ public class Game extends JFrame {
         tileSize = getGameHeight() / amount;
     }
 
+    /**
+     * Executes once the {@code gameFlow} starts.
+     */
     public void startGame() {
 
     }
 
+    /**
+     * Executes in every frame of the game before the
+     * {@code drawGame} method.
+     * <p>
+     * Updates all objects on the current stage.
+     */
     public void updateGame() {
 
     }
 
+    /**
+     * Executes in every frame of the game after the
+     * {@code updateGame} method.
+     * <p>
+     * Draws every object on the current stage.
+     */
     public void drawGame() {
 
     }
