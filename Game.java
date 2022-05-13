@@ -5,15 +5,15 @@ import java.awt.Color;
 
 public class Game extends JFrame {
 
-    public JPanel gamePanel;
+    public JPanel gamePanel = new JPanel();
+    public GameFlow gameFlow;
     public int tileSize;
 
-    public Game(String title, int width, int height) {
+    public Game(String title, int width, int height, int fps) {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle(title);
 
         // Create the game panel
-        gamePanel = new JPanel();
         gamePanel.setDoubleBuffered(true);
         gamePanel.setPreferredSize(new Dimension(width, height));
         gamePanel.setBackground(Color.BLACK);
@@ -23,6 +23,9 @@ public class Game extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
         setResizable(false);
+
+        gameFlow = new GameFlow(this, fps);
+        gameFlow.start();
     }
 
     /**
@@ -89,6 +92,18 @@ public class Game extends JFrame {
      */
     public void setVerticalTileAmount(int amount) {
         tileSize = getGameHeight() / amount;
+    }
+
+    public void startGame() {
+
+    }
+
+    public void updateGame() {
+
+    }
+
+    public void drawGame() {
+
     }
 
 }
