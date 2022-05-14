@@ -1,8 +1,9 @@
 # Extra folder
 /extra/
 
-# Test file
+# Test file and folder
 Test.java
+/test/
 
 # Compiled class file
 *.class

@@ -1,7 +1,4 @@
 import javax.swing.JFrame;
-import javax.swing.JPanel;
-import java.awt.Dimension;
-import java.awt.Color;
 
 /**
  * Class for creating a new game.
@@ -11,9 +8,9 @@ import java.awt.Color;
 public class Game extends JFrame {
 
     /**
-     * The {@code JPanel} for displaying the game.
+     * The {@code GamePanel} for displaying the game.
      */
-    public JPanel gamePanel = new JPanel();
+    public GamePanel gamePanel;
 
     /**
      * {@code GameFlow} for controlling the game frame rate.
@@ -38,10 +35,8 @@ public class Game extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle(title);
 
-        // Create the game panel
-        gamePanel.setDoubleBuffered(true);
-        gamePanel.setPreferredSize(new Dimension(width, height));
-        gamePanel.setBackground(Color.BLACK);
+        // Create the GamePanel
+        gamePanel = new GamePanel(this, width, height);
 
         add(gamePanel);
         pack();
@@ -49,6 +44,7 @@ public class Game extends JFrame {
         setVisible(true);
         setResizable(false);
 
+        // Create and start a new GameFlow
         gameFlow = new GameFlow(this, fps);
         gameFlow.start();
     }
@@ -143,7 +139,7 @@ public class Game extends JFrame {
      * Draws every object on the current stage.
      */
     public void drawGame() {
-
+        gamePanel.repaint();
     }
 
 }
