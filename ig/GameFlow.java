@@ -1,3 +1,5 @@
+package ig;
+
 /**
  * {@code GameFlow} is a class used for creating a new thread
  * on which the game will run.

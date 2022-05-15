@@ -1,3 +1,5 @@
+package ig;
+
 import javax.swing.JFrame;
 import java.awt.Dimension;
 
@@ -68,6 +70,7 @@ public abstract class Game extends JFrame {
     public void setGameSize(int width, int height) {
         gamePanel.setPreferredSize(new Dimension(width, height));
         pack();
+        setLocationRelativeTo(null);
     }
 
     /**
