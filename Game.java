@@ -1,16 +1,20 @@
 import javax.swing.JFrame;
+import java.awt.Dimension;
 
 /**
- * Class for creating a new game.
+ * Abstract class for creating a new game.
+ * <p>
+ * To use this class you must extend it into
+ * your own game class.
  * 
  * @author Daniel O Sousa
  */
-public class Game extends JFrame {
+public abstract class Game extends JFrame {
 
     /**
      * The {@code GamePanel} for displaying the game.
      */
-    public GamePanel gamePanel;
+    public GamePanel gamePanel = new GamePanel(this);
 
     /**
      * {@code GameFlow} for controlling the game frame rate.
@@ -23,30 +27,18 @@ public class Game extends JFrame {
     public int tileSize;
 
     /**
-     * Creates a new {@code Game} with the specified title {@code title},
-     * width {@code width}, height {@code height} and FPS {@code fps}.
-     * 
-     * @param title The title of the game.
-     * @param width The game's width.
-     * @param height The game's height.
-     * @param fps The fps of the game.
+     * Sets some basic configurations for this game, including
+     * its title, its size (which defaults to 400 by 400 pixels)
+     * and its {@code gamePanel}.
      */
-    public Game(String title, int width, int height, int fps) {
+    public Game() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle(title);
-
-        // Create the GamePanel
-        gamePanel = new GamePanel(this, width, height);
-
+        setTitle("Placeholder");
         add(gamePanel);
-        pack();
+        setGameSize(400, 400);
         setLocationRelativeTo(null);
         setVisible(true);
         setResizable(false);
-
-        // Create and start a new GameFlow
-        gameFlow = new GameFlow(this, fps);
-        gameFlow.start();
     }
 
     /**
@@ -68,24 +60,29 @@ public class Game extends JFrame {
     }
 
     /**
-     * Returns this game's displaying area width.
-     * <p>
-     * The displaying area is the panel on which the
-     * game is shown.
+     * Sets this game's width and height.
      * 
-     * @return this game's displaying area width
+     * @param width The new width
+     * @param height The new height
+     */
+    public void setGameSize(int width, int height) {
+        gamePanel.setPreferredSize(new Dimension(width, height));
+        pack();
+    }
+
+    /**
+     * Returns this game's panel width.
+     * 
+     * @return this game's panel width
      */
     public int getGameWidth() {
         return gamePanel.getWidth();
     }
 
     /**
-     * Returns this game's displaying area height.
-     * <p>
-     * The displaying area is the panel on which the
-     * game is shown.
+     * Returns this game's panel height.
      * 
-     * @return this game's displaying area height
+     * @return this game's panel height
      */
     public int getGameHeight() {
         return gamePanel.getHeight();
@@ -116,21 +113,41 @@ public class Game extends JFrame {
     }
 
     /**
-     * Executes once the {@code gameFlow} starts.
+     * Creates a new {@code GameFlow} and starts it
+     * with the passed {@code fps}.
+     * 
+     * @param fps The fps with which the game flow will run
      */
-    public void startGame() {
-
+    public void createGameFlow(int fps) {
+        gameFlow = new GameFlow(this, fps);
+        gameFlow.start();
     }
 
     /**
-     * Executes in every frame of the game before the
-     * {@code drawGame} method.
-     * <p>
-     * Updates all objects on the current stage.
+     * Tells if the game should display its current FPS or
+     * not.
+     * 
+     * @param b {@code true} to display and {@code false}
+     *          to not
      */
-    public void updateGame() {
-
+    public void displayFps(boolean b) {
+        gameFlow.displayFps = b;
     }
+
+    /**
+     * This method serves to define what should happen
+     * once the game flow starts.
+     */
+    public abstract void startGame();
+
+    /**
+     * This method serves to define what should happen in
+     * every frame of the game.
+     * <p>
+     * This will execute in every frame of the game before the
+     * {@code drawGame} method.
+     */
+    public abstract void updateGame();
 
     /**
      * Executes in every frame of the game after the
