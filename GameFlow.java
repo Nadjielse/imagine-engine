@@ -9,7 +9,7 @@ public class GameFlow implements Runnable {
     /**
      * The game which is running through this GameFlow.
      */
-    public Game game;
+    private Game game;
 
     /**
      * The thread that runs the game.

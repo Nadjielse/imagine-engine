@@ -14,17 +14,17 @@ public abstract class Game extends JFrame {
     /**
      * The {@code GamePanel} for displaying the game.
      */
-    public GamePanel gamePanel = new GamePanel(this);
+    private GamePanel gamePanel = new GamePanel(this);
 
     /**
      * {@code GameFlow} for controlling the game frame rate.
      */
-    public GameFlow gameFlow;
+    private GameFlow gameFlow;
 
     /**
      * The size of the game's tiles.
      */
-    public int tileSize;
+    private int tileSize;
 
     /**
      * Sets some basic configurations for this game, including

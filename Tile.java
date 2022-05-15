@@ -18,7 +18,7 @@ public abstract class Tile {
     /**
      * The game from which this tile is.
      */
-    public Game game;
+    private Game game;
 
     /**
      * The path for this tile's sprite.
@@ -68,7 +68,7 @@ public abstract class Tile {
      */
     public void setGame(Game game) {
         this.game = game;
-        this.size = game.tileSize;
+        this.size = game.getTileSize();
     }
 
     /**

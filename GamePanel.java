@@ -15,7 +15,7 @@ public class GamePanel extends JPanel {
      * The game which is displayed by this
      * {@code GamePanel}.
      */
-    public Game game;
+    private Game game;
 
     /**
      * Creates a {@code GamePanel} for displaying
