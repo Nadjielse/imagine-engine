@@ -1,5 +1,4 @@
 import javax.swing.JPanel;
-import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -20,18 +19,14 @@ public class GamePanel extends JPanel {
 
     /**
      * Creates a {@code GamePanel} for displaying
-     * the game {@code game} with the specified width
-     * {@code width} and height {@code height}.
+     * the game.
      * 
      * @param game The game which will be displayed
-     * @param width The width of the game panel
-     * @param height The height of the game panel
      */
-    public GamePanel(Game game, int width, int height) {
+    public GamePanel(Game game) {
         this.game = game;
         
         setDoubleBuffered(true);
-        setPreferredSize(new Dimension(width, height));
         setBackground(Color.BLACK);
     }
 
