@@ -1,40 +1,124 @@
 package ig.sprite;
 
 import java.awt.image.BufferedImage;
-import javax.imageio.ImageIO;
-import java.io.IOException;
 
-public class SpriteSheet {
+/**
+ * Class to instantiate a sprite sheet and load
+ * its sprites separately.
+ * 
+ * @author Daniel O Sousa
+ */
+public class SpriteSheet extends Sprite {
 
-    private String path;
-    private BufferedImage img;
+    /**
+     * Represents how many rows this sprite sheet
+     * has.
+     */
     private int rows = 1;
+
+    /**
+     * Represents how many columns this
+     * sprite sheet has.
+     */
     private int columns = 1;
+
+    /**
+     * Represents how big, in pixels, is the
+     * gap between each sprite inside the
+     * sprite sheet.
+     */
     private int gap = 0;
+
+    /**
+     * Matrix that stores the sprites from this
+     * sprite sheet separately.
+     */
+    private Sprite[][] sprites;
+
+    /**
+     * Stores the width of the sprites from
+     * this sprite sheet.
+     */
     private int spriteWidth;
+
+    /**
+     * Stores the height of the sprites from
+     * this sprite sheet.
+     */
     private int spriteHeight;
 
+
     public SpriteSheet(String path) {
-        this.path = path;
-        load();
+        super(path);
+        setSpriteDimensions();
+        loadSprites();
     }
 
     public SpriteSheet(String path, int rows, int columns) {
-        this.path = path;
-        this.rows = rows;
-        this.columns = columns;
-        load();
+        super(path);
+        setRows(rows);
+        setColumns(columns);
+        setSpriteDimensions();
+        loadSprites();
     }
 
     public SpriteSheet(String path, int rows, int columns, int gap) {
-        this.path = path;
-        this.rows = rows;
-        this.columns = columns;
+        super(path);
+        setRows(rows);
+        setColumns(columns);
         setGap(gap);
-        load();
+        setSpriteDimensions();
+        loadSprites();
     }
 
-    public void setGap(int gap) {
+
+    public SpriteSheet(BufferedImage image) {
+        super(image);
+        setSpriteDimensions();
+        loadSprites();
+    }
+
+    public SpriteSheet(BufferedImage image, int rows, int columns) {
+        super(image);
+        setRows(rows);
+        setColumns(columns);
+        setSpriteDimensions();
+        loadSprites();
+    }
+
+    public SpriteSheet(BufferedImage image, int rows, int columns, int gap) {
+        super(image);
+        setRows(rows);
+        setColumns(columns);
+        setGap(gap);
+        setSpriteDimensions();
+        loadSprites();
+    }
+
+
+    private void setRows(int rows) {
+        if(rows > 0) {
+            this.rows = rows;
+        }
+    }
+
+    public int getRows() {
+        return this.rows;
+    }
+
+
+    private void setColumns(int columns) {
+        if(columns > 0) {
+            this.columns = columns;
+        }
+    }
+
+    public int getColumns() {
+        return this.columns;
+    }
+
+
+    private void setGap(int gap) {
         if(gap >= 0) {
             this.gap = gap;
         }
@@ -44,25 +128,51 @@ public class SpriteSheet {
         return this.gap;
     }
 
-    public void load() {
-        try {
-            img = ImageIO.read(getClass().getResourceAsStream(path));
-        } catch(IOException e) {
-            e.printStackTrace();
+    
+    private void setSpriteDimensions() {
+        setSpriteWidth();
+        setSpriteHeight();
+    }
+
+
+    private void setSpriteWidth() {
+        spriteWidth = (getWidth() - gap * (columns - 1)) / columns;
+    }
+
+    public int getSpriteWidth() {
+        return spriteWidth;
+    }
+
+
+    private void setSpriteHeight() {
+        spriteHeight = (getHeight() - gap * (rows - 1)) / rows;
+    }
+
+    public int getSpriteHeight() {
+        return spriteHeight;
+    }
+
+
+    public Sprite[][] getSprites() {
+        return sprites;
+    }
+
+
+    private void loadSprites() {
+        sprites = new Sprite[rows][columns];
+
+        for(int i = 0; i < rows; i++) {
+            for(int j = 0; j < columns; j++) {
+                sprites[i][j] = new Sprite (
+                    getImage().getSubimage (
+                        spriteWidth * i + gap * i,
+                        spriteHeight * j + gap * j,
+                        spriteWidth,
+                        spriteHeight
+                    )
+                );
+            }
         }
-    }
-
-    public void updateDimensions() {
-        updateWidth();
-        updateHeight();
-    }
-
-    public void updateWidth() {
-        spriteWidth = img.getWidth() / columns;
-    }
-
-    public void updateHeight() {
-        spriteHeight = img.getHeight() / rows;
     }
 
 }
