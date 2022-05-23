@@ -314,8 +314,8 @@ public class SpriteSheet extends Sprite {
             for(int j = 0; j < columns; j++) {
                 sprites[i][j] = new Sprite (
                     getImage().getSubimage (
-                        spriteWidth * i + gap * i,
-                        spriteHeight * j + gap * j,
+                        spriteWidth * j + gap * j,
+                        spriteHeight * i + gap * i,
                         spriteWidth,
                         spriteHeight
                     )
