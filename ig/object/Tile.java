@@ -239,7 +239,7 @@ public abstract class Tile {
 
 
     private void updateCurrentFrame() {
-        this.currentFrame = spriteSheet.getSprites()[frameX][frameY];
+        this.currentFrame = spriteSheet.getSprites()[frameY][frameX];
     }
 
     public Sprite getCurrentFrame() {
