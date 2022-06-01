@@ -5,46 +5,24 @@ import java.awt.Color;
 
 import ig.sprite.SpriteSheet;
 import ig.sprite.Sprite;
-import ig.space.Point;
+import ig.shape.Rectangle;
 
 /**
- * Class for creating new tiles for a {@code Game}.
+ * Class for creating new game objects.
  * In order to use this class, you must extend
  * it and call its constructor.
+ * 
+ * @author Daniel O Sousa
  */
-public abstract class Tile {
-
-    /**
-     * The x coordinate of this {@code Tile}.
-     */
-    private int x;
-
-    /**
-     * The y coordinate of this {@code Tile}.
-     */
-    private int y;
-
-    /**
-     * The width of this {@code Tile}.
-     * <p>
-     * The value of this property must not
-     * be a negative number.
-     */
-    private int width;
-
-    /**
-     * The height of this {@code Tile}.
-     * <p>
-     * The value of this property must not
-     * be a negative number.
-     */
-    private int height;
+public abstract class GameObject extends Rectangle {
 
     /**
      * The color with which the {@code draw} method
-     * will draw the bounding box of this {@code Tile},
+     * will draw the bounding box of this {@code GameObject},
      * if the {@code showBoundingBox} property is set
      * to {@code true}.
+     * <p>
+     * Initially this is set to transparent.
      * 
      * @see #draw(Graphics2D)
      * @see #showBoundingBox
@@ -52,7 +30,7 @@ public abstract class Tile {
     private Color color = new Color(255, 255, 255, 0);
 
     /**
-     * The sprite sheet of this {@code Tile}.
+     * The sprite sheet of this {@code GameObject}.
      */
     private SpriteSheet spriteSheet;
 
@@ -79,7 +57,7 @@ public abstract class Tile {
     private int frameY = 0;
 
     /**
-     * The current frame of this {@code Tile}
+     * The current frame of this {@code GameObject}
      * that will be drawn by the {@code draw}
      * method if the {@code showSprite}
      * property is set to {@code true}.
@@ -92,7 +70,7 @@ public abstract class Tile {
     // private Stage stage;
 
     /**
-     * Property that tells if this {@code Tile}'s
+     * Property that tells if this {@code GameObject}'s
      * bounding box should be drawn when the
      * {@code draw} method is called.
      * <p>
@@ -107,7 +85,7 @@ public abstract class Tile {
     private boolean showBoundingBox = false;
 
     /**
-     * Property that tells if this {@code Tile}'s
+     * Property that tells if this {@code GameObject}'s
      * current frame should be drawn when the
      * {@code draw} method is called.
      * <p>
@@ -119,148 +97,34 @@ public abstract class Tile {
     private boolean showSprite = true;
 
     /**
-     * Constructs a {@code Tile} instance, which will have
+     * Constructs a {@code GameObject} instance, which will have
      * the passed {@code spriteSheet}, {@code x} and {@code y}
-     * coordinates, {@code width} and {@code height}
+     * coordinates and {@code width} and {@code height} dimensions.
      * <p>
      * The {@code width} and {@code height} arguments should be
-     * positive, otherwise they are not set and the dimensions
-     * of this {@code Tile} keep being the initial ones (0 by 0 pixels).
+     * positive, otherwise they are not set.
      * 
-     * @param spriteSheet The {@code SpriteSheet} for this {@code Tile}
+     * @param spriteSheet The {@code SpriteSheet} for this {@code GameObject}
      * @param x The x coordinate
      * @param y The y coordinate
-     * @param width The width of this {@code Tile}
-     * @param height The height of this {@code Tile}
+     * @param width The width of this {@code GameObject}
+     * @param height The height of this {@code GameObject}
      */
-    public Tile(SpriteSheet spriteSheet, int x, int y, int width, int height) {
+    public GameObject(SpriteSheet spriteSheet, int x, int y, int width, int height) {
+        super(x, y, width, height);
         setSpriteSheet(spriteSheet);
-        setCoordinates(x, y);
-        setSize(width, height);
     }
 
     /**
-     * Sets the x coordinate of this {@code Tile}.
-     * 
-     * @param x the x coordinate
-     */
-    public void setX(int x) {
-        this.x = x;
-    }
-
-    /**
-     * Returns the x coordinate of this {@code Tile}.
-     * 
-     * @return the x coordinate
-     */
-    public int getX() {
-        return this.x;
-    }
-
-    /**
-     * Sets the y coordinate of this {@code Tile}.
-     * 
-     * @param y the y coordinate
-     */
-    public void setY(int y) {
-        this.y = y;
-    }
-
-    /**
-     * Returns the y coordinate of this {@code Tile}.
-     * 
-     * @return the y coordinate
-     */
-    public int getY() {
-        return this.y;
-    }
-
-    /**
-     * Sets the x and y coordinates of this {@code Tile}.
-     * 
-     * @param x the x coordinate
-     * @param y the y coordinate
-     */
-    public void setCoordinates(int x, int y) {
-        setX(x);
-        setY(y);
-    }
-
-    /**
-     * Sets the x and y coordinates of this {@code Tile}.
-     * 
-     * @param point a {@code Point} instance informing
-     *              the x and y coordinates
-     */
-    public void setCoordinates(Point point) {
-        setCoordinates(point.getX(), point.getY());
-    }
-
-    /**
-     * Sets the width if the passed {@code width}
-     * is greater or equal to 0.
-     * 
-     * @param width the width to be set
-     */
-    private void setWidth(int width) {
-        if(width >= 0) {
-            this.width = width;
-        }
-    }
-
-    /**
-     * Returns the width of this {@code Tile}.
-     * 
-     * @return the width of this {@code Tile}
-     */
-    public int getWidth() {
-        return this.width;
-    }
-
-    /**
-     * Sets the height if the passed {@code height}
-     * is greater or equal to 0.
-     * 
-     * @param height the height to be set
-     */
-    private void setHeight(int height) {
-        if(height >= 0) {
-            this.height = height;
-        }
-    }
-
-    /**
-     * Returns the height of this {@code Tile}.
-     * 
-     * @return the height of this {@code Tile}
-     */
-    public int getHeight() {
-        return this.height;
-    }
-
-    /**
-     * Sets the width if the passed {@code width}
-     * is greater or equal to 0 and does the same
-     * with the {@code height}.
-     * 
-     * @param width the width to be set
-     * @param height the height to be set
-     */
-    private void setSize(int width, int height) {
-        setWidth(width);
-        setHeight(height);
-    }
-
-    /**
-     * Sets the sprite sheet of this {@code Tile} and
+     * Sets the {@code spriteSheet} of this {@code GameObject} and
      * sets both the {@code frameX} and {@code frameY}
-     * to 0.
+     * to {@code 0}.
      * <p>
      * Also updates the {@code currentFrame} property
      * to match the frame pointed by the {@code frameX} and
      * {@code frameY} properties.
      * 
-     * @param spriteSheet the new sprite sheet of this {@code Tile}
+     * @param spriteSheet the new sprite sheet of this {@code GameObject}
      * 
      * @see #currentFrame
      * @see #frameX
@@ -273,22 +137,22 @@ public abstract class Tile {
     }
 
     /**
-     * Returns the sprite sheet of this {@code Tile}.
+     * Returns the sprite sheet of this {@code GameObject}.
      * 
-     * @return the sprite sheet of this {@code Tile}
+     * @return the sprite sheet of this {@code GameObject}
      */
     public SpriteSheet getSpriteSheet() {
         return this.spriteSheet;
     }
 
     /**
-     * Sets the column of this {@code Tile}'s {@code spriteSheet}
+     * Sets the column of this {@code GameObject}'s {@code spriteSheet}
      * - if it isn't {@code null} - where is located the
      * frame which should be drawn by the {@code draw} method.
      * <p>
      * If the passed {@code frameX} is greater or equal to the
      * number of columns of the {@code spriteSheet}, or less
-     * than 0, than this method does nothing.
+     * than {@code 0}, than this method does nothing.
      * <p>
      * This method also updates the {@code currentFrame} property,
      * so it matches the new {@code frameX} and {@code frameY}
@@ -322,8 +186,7 @@ public abstract class Tile {
 
     /**
      * If the {@code spriteSheet} isn't {@code null}, makes
-     * the {@code frameX} change, turning the next frame
-     * into the {@code currentFrame}.
+     * the {@code frameX} go to the next frame.
      */
     public void nextFrameX() {
         if(spriteSheet != null) {
@@ -337,8 +200,7 @@ public abstract class Tile {
 
     /**
      * If the {@code spriteSheet} isn't {@code null}, makes
-     * the {@code frameX} change, turning the previous frame
-     * into the {@code currentFrame}.
+     * the {@code frameX} go to the previous frame.
      */
     public void previousFrameX() {
         if(spriteSheet != null) {
@@ -351,13 +213,13 @@ public abstract class Tile {
     }
 
     /**
-     * Sets the row of this {@code Tile}'s {@code spriteSheet}
+     * Sets the row of this {@code GameObject}'s {@code spriteSheet}
      * - if it isn't {@code null} - where is located the
      * frame which should be drawn by the {@code draw} method.
      * <p>
      * If the passed {@code frameY} is greater or equal to the
      * number of rows of the {@code spriteSheet}, or less
-     * than 0, than this method does nothing.
+     * than {@code 0}, than this method does nothing.
      * <p>
      * This method also updates the {@code currentFrame} property,
      * so it matches the new {@code frameX} and {@code frameY}
@@ -391,8 +253,7 @@ public abstract class Tile {
 
     /**
      * If the {@code spriteSheet} isn't {@code null}, makes
-     * the {@code frameY} change, turning the next frame
-     * into the {@code currentFrame}.
+     * the {@code frameY} go to the next frame.
      */
     public void nextFrameY() {
         if(spriteSheet != null) {
@@ -406,8 +267,7 @@ public abstract class Tile {
 
     /**
      * If the {@code spriteSheet} isn't {@code null}, makes
-     * the {@code frameY} change, turning the previous frame
-     * into the {@code currentFrame}.
+     * the {@code frameY} go to the previous frame.
      */
     public void previousFrameY() {
         if(spriteSheet != null) {
@@ -434,10 +294,10 @@ public abstract class Tile {
 
     /**
      * Returns the {@code currentFrame} of this
-     * {@code Tile}.
+     * {@code GameObject}.
      * 
      * @return the {@code currentFrame} of this
-     *             {@code Tile}.
+     *             {@code GameObject}.
      */
     public Sprite getCurrentFrame() {
         return this.currentFrame;
@@ -452,12 +312,12 @@ public abstract class Tile {
 
     /**
      * Sets the color which would be used to
-     * draw the bounding box of this {@code Tile}.
+     * draw the bounding box of this {@code GameObject}.
      * <p>
      * However if the passed {@code color} is
      * {@code null}, does nothing.
      * 
-     * @param color the color of this {@code Tile}'s
+     * @param color the color of this {@code GameObject}'s
      *              bounding box
      */
     public void setColor(Color color) {
@@ -468,9 +328,9 @@ public abstract class Tile {
 
     /**
      * Returns the color of the bounding box
-     * of this {@code Tile}.
+     * of this {@code GameObject}.
      * 
-     * @return the color of this {@code Tile}'s
+     * @return the color of this {@code GameObject}'s
      *         bounding box
      */
     public Color getColor() {
@@ -480,7 +340,7 @@ public abstract class Tile {
     /**
      * Sets the {@code showSprite} property to the
      * passed boolean {@code b}, so the sprite
-     * of this {@code Tile} is visible or not.
+     * of this {@code GameObject} is visible or not.
      * 
      * @param b the value for the {@code showSprite}
      *          property
@@ -494,7 +354,7 @@ public abstract class Tile {
      * property, which is {@code true} if the sprite is being
      * drawn and {@code false} otherwise.
      * 
-     * @return the {@code showShowSprite} property
+     * @return the {@code showSprite} property
      */
     public boolean getShowSprite() {
         return this.showSprite;
@@ -503,7 +363,7 @@ public abstract class Tile {
     /**
      * Sets the {@code showBoundingBox} property to the
      * passed boolean {@code b}, so the bounding box
-     * of this {@code Tile} is visible or not.
+     * of this {@code GameObject} is visible or not.
      * 
      * @param b the value for the {@code showBoundingBox}
      *          property
@@ -538,7 +398,7 @@ public abstract class Tile {
      * {@code start} method is called.
      * <p>
      * This method should be used for defining what
-     * should happen when this {@code Tile} is initialized.
+     * should happen when this {@code GameObject} is initialized.
      * 
      * @see #start()
      */
@@ -559,7 +419,7 @@ public abstract class Tile {
      * {@code update} method is called.
      * <p>
      * This method should be used for defining what
-     * should happen to this {@code Tile} each
+     * should happen to this {@code GameObject} each
      * frame of the {@code Game}.
      * 
      * @see #update()
@@ -567,7 +427,7 @@ public abstract class Tile {
     protected abstract void onUpdate();
 
     /**
-     * Draws this {@code Tile} using the passed
+     * Draws this {@code GameObject} using the passed
      * {@code Graphics2D} instance.
      * <p>
      * The drawing of the bounding box occurs first
@@ -576,7 +436,7 @@ public abstract class Tile {
      * (if the {@code showSprite} property is set to
      * {@code true}).
      * <p>
-     * After drawing the {@code Tile}, this method calls the
+     * After drawing the {@code GameObject}, this method calls the
      * {@code onDraw} method.
      * 
      * @param g2 a {@code Graphics2D} instance
@@ -586,10 +446,10 @@ public abstract class Tile {
     public void draw(Graphics2D g2) {
         if(showBoundingBox) {
             g2.setColor(color);
-            g2.fillRect(x, y, width, height);
+            g2.fillRect(getX(), getY(), getWidth(), getHeight());
         }
         if(showSprite) {
-            g2.drawImage(currentFrame.getImage(), x, y, width, height, null);
+            g2.drawImage(currentFrame.getImage(), getX(), getY(), getWidth(), getHeight(), null);
         }
 
         onDraw(g2);
@@ -600,7 +460,7 @@ public abstract class Tile {
      * {@code draw} method is called.
      * <p>
      * This method should be used for defining what
-     * should happen to this {@code Tile} each frame
+     * should happen to this {@code GameObject} each frame
      * of the {@code Game}, when it is drawn.
      * <p>
      * The parameter {@code g2} serves to do custom

@@ -1,4 +1,4 @@
-package ig.space;
+package ig.shape;
 
 public class Point {
 
