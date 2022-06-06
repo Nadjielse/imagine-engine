@@ -3,6 +3,8 @@ package ig;
 import javax.swing.JFrame;
 import java.awt.Dimension;
 
+import ig.flow.GameFlow;
+
 /**
  * Abstract class for creating a new game.
  * <p>
