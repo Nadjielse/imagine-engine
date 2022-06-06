@@ -1,4 +1,6 @@
-package ig;
+package ig.flow;
+
+import ig.Game;
 
 /**
  * {@code GameFlow} is a class used for creating a new thread
