@@ -15,14 +15,14 @@ public interface GameFluid {
      * the class that implements
      * this interface.
      */
-    public void start();
+    void start();
 
     /**
      * Method used to update
      * the class that implements
      * this interface.
      */
-    public void update();
+    void update();
 
     /**
      * Method used to draw the
@@ -32,6 +32,6 @@ public interface GameFluid {
      * @param g2 a {@code Graphics2D} instance
      *           to draw with
      */
-    public void draw(Graphics2D g2);
+    void draw(Graphics2D g2);
 
 }
