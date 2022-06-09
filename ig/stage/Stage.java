@@ -15,7 +15,7 @@ import ig.object.GameObject;
  * 
  * @author Daniel O Sousa
  */
-public class Stage implements GameFluid {
+public abstract class Stage implements GameFluid {
 
     /**
      * The title of this {@code Stage}.
@@ -368,6 +368,24 @@ public class Stage implements GameFluid {
         return objects;
     }
 
+    private void startObjects() {
+        for(GameObject object : objects) {
+            object.start();
+        }
+    }
+
+    private void updateObjects() {
+        for(GameObject object : objects) {
+            object.update();
+        }
+    }
+
+    private void drawObjects(Graphics2D g2) {
+        for(GameObject object : objects) {
+            object.draw(g2);
+        }
+    }
+
     /**
      * Executes the {@code start} method of
      * the objects of this {@code Stage}.
@@ -378,9 +396,8 @@ public class Stage implements GameFluid {
      * @see #onStart()
      */
     public void start() {
-        for(GameObject object : objects) {
-            object.start();
-        }
+        startObjects();
+
         onStart();
     }
 
@@ -391,9 +408,7 @@ public class Stage implements GameFluid {
      * 
      * @see #start()
      */
-    public void onStart() {
-
-    }
+    public abstract void onStart();
 
     /**
      * This method is executed every
@@ -408,9 +423,8 @@ public class Stage implements GameFluid {
      * @see #onUpdate()
      */
     public void update() {
-        for(GameObject object : objects) {
-            object.update();
-        }
+        updateObjects();
+
         onUpdate();
     }
 
@@ -421,9 +435,7 @@ public class Stage implements GameFluid {
      * 
      * @see #update()
      */
-    public void onUpdate() {
-
-    }
+    public abstract void onUpdate();
 
     /**
      * This method is executed every frame
@@ -441,9 +453,8 @@ public class Stage implements GameFluid {
      * @see #onDraw(Graphics2D)
      */
     public void draw(Graphics2D g2) {
-        for(GameObject object : objects) {
-            object.draw(g2);
-        }
+        drawObjects(g2);
+        
         onDraw(g2);
     }
 
@@ -460,8 +471,6 @@ public class Stage implements GameFluid {
      * 
      * @see #draw(Graphics2D)
      */
-    public void onDraw(Graphics2D g2) {
-
-    }
+    public abstract void onDraw(Graphics2D g2);
 
 }
