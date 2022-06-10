@@ -1,4 +1,4 @@
-package ig;
+package ig.game;
 
 import javax.swing.JFrame;
 import java.awt.Dimension;
