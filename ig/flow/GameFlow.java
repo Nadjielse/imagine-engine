@@ -84,13 +84,33 @@ public class GameFlow implements Runnable {
         this.fpsInterval = 1000000000 / this.fps;
     }
 
+    public int getFps() {
+        return this.fps;
+    }
+
+    public double getFpsInterval() {
+        return this.fpsInterval;
+    }
+
+    public void setDisplayFps(boolean displayFps) {
+        this.displayFps = displayFps;
+    }
+
+    public boolean getDisplayFps() {
+        return this.displayFps;
+    }
+
+    public void killFlow() {
+        flow = null;
+    }
+
     /**
      * Executes the {@code startGame} method from this {@code game}
      * and starts this {@code GameFlow}'s {@code flow}
      */
     public void start() {
         lastTime = System.nanoTime();
-        game.startGame();
+        game.start();
         flow.start();
     }
 
@@ -103,8 +123,8 @@ public class GameFlow implements Runnable {
             lastTime = currentTime;
 
             if(delta >= 1) {
-                game.updateGame();
-                game.drawGame();
+                game.update();
+                game.getGamePanel().repaint();
                 delta--;
 
                 timesUpdated++;

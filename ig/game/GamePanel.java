@@ -5,40 +5,39 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-/**
- * Class for creating a panel for displaying
- * a game.
- * 
- * @author Daniel O Sousa
- */
 public class GamePanel extends JPanel {
+    
+    private GameFrame gameFrame;
 
-    /**
-     * The game which is displayed by this
-     * {@code GamePanel}.
-     */
-    private Game game;
-
-    /**
-     * Creates a {@code GamePanel} for displaying
-     * the game.
-     * 
-     * @param game The game which will be displayed
-     */
-    public GamePanel(Game game) {
-        this.game = game;
-        
+    public GamePanel(GameFrame gameFrame) {
+        storeGameFrame(gameFrame);
         setDoubleBuffered(true);
         setBackground(Color.BLACK);
     }
 
+    private void storeGameFrame(GameFrame gameFrame) {
+        if(gameFrame == null) {
+            throw new IllegalArgumentException("gameFrame cannot be null");
+        }
+
+        this.gameFrame = gameFrame;
+    }
+
+    public GameFrame getGameFrame() {
+        return this.gameFrame;
+    }
+
+    public Game getGame() {
+        return gameFrame.getGame();
+    }
+
+    @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g;
-
-        // Draw
-
+        getGame().draw(g2);
+        
         g2.dispose();
     }
 

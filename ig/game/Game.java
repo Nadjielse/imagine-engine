@@ -1,9 +1,11 @@
 package ig.game;
 
-import javax.swing.JFrame;
-import java.awt.Dimension;
+import java.util.ArrayList;
+import java.awt.Graphics2D;
 
-import ig.flow.GameFlow;
+import ig.flow.*;
+import ig.input.KeyHandler;
+import ig.stage.Stage;
 
 /**
  * Abstract class for creating a new game.
@@ -13,155 +15,304 @@ import ig.flow.GameFlow;
  * 
  * @author Daniel O Sousa
  */
-public abstract class Game extends JFrame {
+public abstract class Game implements GameFluid {
 
     /**
-     * The {@code GamePanel} for displaying the game.
+     * The {@code GameFrame} where this game will be held.
      */
-    private GamePanel gamePanel = new GamePanel(this);
+    private GameFrame gameFrame;
 
     /**
-     * {@code GameFlow} for controlling the game frame rate.
+     * An object to help keeping track of
+     * the keys pressed by the player.
+     */
+    private KeyHandler keyHandler;
+
+    /**
+     * An object for controlling the flow of the game.
      */
     private GameFlow gameFlow;
 
     /**
-     * The size of the game's tiles.
+     * Field which has the information of the
+     * size of the tiles of this {@code Game}.
      */
     private int tileSize;
 
     /**
-     * Sets some basic configurations for this game, including
-     * its title, its size (which defaults to 400 by 400 pixels)
-     * and its {@code gamePanel}.
+     * Stores the stages of this {@code Game}.
+     */
+    private ArrayList<Stage> stages;
+
+    /**
+     * Stores the current stage of this {@code Game}.
+     */
+    private Stage currentStage;
+
+    /**
+     * Boolean value to configure if a tile
+     * grid should be displayed. This grid is
+     * usually great for debugging.
+     */
+    private boolean drawTileGrid = false;
+
+    /**
+     * Constructs a new {@code Game} instance
+     * with the default size of {@code 1024} by {@code 576} pixels.
      */
     public Game() {
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setTitle("Placeholder");
-        add(gamePanel);
-        setGameSize(400, 400);
-        setLocationRelativeTo(null);
-        setVisible(true);
-        setResizable(false);
+        createGameFrame();
+        setSize(1024, 576);
+        createKeyHandler();
     }
 
     /**
-     * Sets this game's tile size to {@code size}
-     * 
-     * @param size the new size to this game's tiles
+     * Creates a new {@code GameFrame}
+     * instance for holding this game.
      */
-    public void setTileSize(int size) {
-        tileSize = size;
+    private void createGameFrame() {
+        this.gameFrame = new GameFrame(this);
     }
 
     /**
-     * Returns the tile size of this game
+     * Returns the frame which is holding this game.
      * 
-     * @return the tile size of this game
+     * @return the {@code GameFrame}
      */
-    public int getTileSize() {
-        return tileSize;
+    public GameFrame getGameFrame() {
+        return this.gameFrame;
     }
 
     /**
-     * Sets this game's width and height.
+     * Returns the width of the frame of this {@code Game}.
      * 
-     * @param width The new width
-     * @param height The new height
+     * @return the {@code GameFrame} width
      */
-    public void setGameSize(int width, int height) {
-        gamePanel.setPreferredSize(new Dimension(width, height));
-        pack();
-        setLocationRelativeTo(null);
+    public int getGameFrameWidth() {
+        return getGameFrame().getWidth();
     }
 
     /**
-     * Returns this game's panel width.
+     * Returns the height of the frame of this {@code Game}.
      * 
-     * @return this game's panel width
+     * @return the {@code GameFrame} height
      */
-    public int getGameWidth() {
-        return gamePanel.getWidth();
+    public int getGameFrameHeight() {
+        return getGameFrame().getHeight();
     }
 
     /**
-     * Returns this game's panel height.
+     * Returns the width of the content pane
+     * of the frame of this {@code Game}.
      * 
-     * @return this game's panel height
+     * @return the content pane width
      */
-    public int getGameHeight() {
-        return gamePanel.getHeight();
+    public int getContentPaneWidth() {
+        return getGameFrame().getContentPaneWidth();
     }
 
     /**
-     * Sets this game's tile size so that the amount
-     * of tiles to fit the game horizontally
-     * are the amount {@code amount}
+     * Returns the height of the content pane
+     * of the frame of this {@code Game}.
      * 
-     * @param amount the amount of tiles to fit the
-     * game horizontally
+     * @return the content pane height
      */
-    public void setHorizontalTileAmount(int amount) {
-        tileSize = getGameWidth() / amount;
+    public int getContentPaneHeight() {
+        return getGameFrame().getContentPaneHeight();
     }
 
     /**
-     * Sets this game's tile size so that the amount
-     * of tiles to fit the game vertically
-     * are the amount {@code amount}
+     * Returns the panel where this {@code Game} is drawn.
      * 
-     * @param amount the amount of tiles to fit the
-     * game vertically
+     * @return the {@code GamePanel}
      */
-    public void setVerticalTileAmount(int amount) {
-        tileSize = getGameHeight() / amount;
+    public GamePanel getGamePanel() {
+        return getGameFrame().getGamePanel();
     }
 
     /**
-     * Creates a new {@code GameFlow} and starts it
-     * with the passed {@code fps}.
+     * Returns the width of the panel of this {@code Game}.
      * 
-     * @param fps The fps with which the game flow will run
+     * @return the {@code GamePanel} width
      */
+    public int getGamePanelWidth() {
+        return getGamePanel().getWidth();
+    }
+
+    /**
+     * Returns the height of the panel of this {@code Game}.
+     * 
+     * @return the {@code GamePanel} height
+     */
+    public int getGamePanelHeight() {
+        return getGamePanel().getHeight();
+    }
+
+    /**
+     * Creates a {@code KeyHandler} instance
+     * to monitor the inputs from the keyboard.
+     */
+    private void createKeyHandler() {
+        this.keyHandler = new KeyHandler();
+        getGameFrame().addKeyListener(this.keyHandler);
+    }
+
+    /**
+     * Returns the {@code KeyHandler} that
+     * is monitoring the keyboard input.
+     * 
+     * @return the {@code KeyHandler}
+     */
+    public KeyHandler getKeyHandler() {
+        return this.keyHandler;
+    }
+
+    /**
+     * Verifies if a key specified by the passed
+     * {@code keyCode} is currently pressed.
+     * 
+     * @param keyCode the code of the key to verify
+     * 
+     * @return {@code true} or {@code false} depending
+     * on the key state
+     */
+    public boolean keyIsPressed(int keyCode) {
+        return getKeyHandler().isPressed(keyCode);
+    }
+
     public void createGameFlow(int fps) {
-        gameFlow = new GameFlow(this, fps);
-        gameFlow.start();
+        this.gameFlow = new GameFlow(this, fps);
     }
 
-    /**
-     * Tells if the game should display its current FPS or
-     * not.
-     * 
-     * @param b {@code true} to display and {@code false}
-     *          to not
-     */
-    public void displayFps(boolean b) {
-        gameFlow.displayFps = b;
+    public GameFlow getGameFlow() {
+        return this.gameFlow;
     }
 
-    /**
-     * This method serves to define what should happen
-     * once the game flow starts.
-     */
-    public abstract void startGame();
-
-    /**
-     * This method serves to define what should happen in
-     * every frame of the game.
-     * <p>
-     * This will execute in every frame of the game before the
-     * {@code drawGame} method.
-     */
-    public abstract void updateGame();
-
-    /**
-     * Executes in every frame of the game after the
-     * {@code updateGame} method.
-     * <p>
-     * Draws every object on the current stage.
-     */
-    public void drawGame() {
-        gamePanel.repaint();
+    public int getFps() {
+        return getGameFlow().getFps();
     }
 
+    public void setDisplayFps(boolean displayFps) {
+        getGameFlow().setDisplayFps(displayFps);
+    }
+
+    public boolean getDisplayFps() {
+        return getGameFlow().getDisplayFps();
+    }
+
+    public void setTileSize(int tileSize) {
+        if(tileSize < 0) {
+            throw new IllegalArgumentException("tileSize cannot be negative");
+        }
+
+        this.tileSize = tileSize;
+    }
+
+    public void setHorizontalTileAmount(int amount) {
+        setTileSize(getGamePanelWidth() / amount);
+    }
+
+    public void setVerticalTileAmount(int amount) {
+        setTileSize(getGamePanelHeight() / amount);
+    }
+
+    public int getTileSize() {
+        return this.tileSize;
+    }
+
+    public void setStages(ArrayList<Stage> stages) {
+        if(stages != null) {
+            for(Stage stage : stages) {
+                stage.setGame(this);
+            }
+            this.stages = stages;
+        }
+    }
+
+    public ArrayList<Stage> getStages() {
+        return this.stages;
+    }
+
+    public void selectStage(int position) {
+        if(getStages() == null || getStages().size() == 0) {
+            throw new NoStagesException("There are no stages to select");
+        }
+        if(position < 0 || position >= stages.size()) {
+            throw new IndexOutOfBoundsException("position " + position + " does not correspond to a stage");
+        }
+
+        Stage currentStage = getStages().get(position);
+        currentStage.start();
+        this.currentStage = currentStage;
+    }
+
+    public void nextStage() {
+        int currentStageIndex = getStages().indexOf(currentStage);
+        if(currentStageIndex < getStages().size() - 1) {
+            selectStage(currentStageIndex + 1);
+        }
+    }
+
+    public void previousStage() {
+        int currentStageIndex = getStages().indexOf(currentStage);
+        if(currentStageIndex > 0) {
+            selectStage(currentStageIndex - 1);
+        }
+    }
+
+    public Stage getCurrentStage() {
+        return this.currentStage;
+    }
+
+    public void setDrawTileGrid(boolean drawTileGrid) {
+        this.drawTileGrid = drawTileGrid;
+    }
+
+    public boolean getDrawTileGrid() {
+        return this.drawTileGrid;
+    }
+
+    public void killGameFlow() {
+        if(getGameFlow() != null) {
+            getGameFlow().killFlow();
+        }
+    }
+
+    public void setSize(int width, int height) {
+        getGameFrame().setContentPaneSize(width, height);
+        getGamePanel().setSize(width, height);
+    }
+
+
+
+    @Override
+    public void start() {
+        
+        onStart();
+    }
+
+    public abstract void onStart();
+
+    @Override
+    public void update() {
+        if(getCurrentStage() != null) {
+            getCurrentStage().update();
+        }
+
+        onUpdate();
+    }
+    
+    public abstract void onUpdate();
+
+    @Override
+    public void draw(Graphics2D g2) {
+        if(getCurrentStage() != null) {
+            getCurrentStage().draw(g2);
+        }
+
+        onDraw(g2);
+    }
+    
+    public abstract void onDraw(Graphics2D g2);
+    
 }
