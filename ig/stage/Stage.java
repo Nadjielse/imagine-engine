@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.awt.Graphics2D;
 
 import ig.flow.GameFluid;
+import ig.game.Game;
 import ig.scenario.Scenario;
 import ig.object.GameObject;
 
@@ -16,6 +17,8 @@ import ig.object.GameObject;
  * @author Daniel O Sousa
  */
 public abstract class Stage implements GameFluid {
+
+    private Game game;
 
     /**
      * The title of this {@code Stage}.
@@ -52,6 +55,14 @@ public abstract class Stage implements GameFluid {
      */
     public Stage() {
 
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
+    }
+
+    public Game getGame() {
+        return this.game;
     }
 
     /**
