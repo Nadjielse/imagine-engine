@@ -2,13 +2,13 @@ package ig.scenario;
 
 import java.awt.Graphics2D;
 
-import ig.game.GameElement;
+import ig.stage.AnimatableStageElement;
 import ig.flow.GameFluid;
 import ig.stage.Stage;
 import ig.sprite.SpriteSheet;
 import ig.game.Game;
 
-public abstract class Scenario extends GameElement implements GameFluid {
+public abstract class Scenario extends AnimatableStageElement implements GameFluid {
 
     private Stage stage;
     private int xParallaxSpeed = 100;
@@ -129,11 +129,11 @@ public abstract class Scenario extends GameElement implements GameFluid {
         // horizontally aligned with repeatX true or is
         // vertically aligned with repeatY true
         if(!isVisible()) {
-            onDraw();
+            onDraw(g2);
             return;
         }
         if(getWidth() == 0 || getHeight() == 0) {
-            onDraw();
+            onDraw(g2);
             return;
         }
 
@@ -155,9 +155,9 @@ public abstract class Scenario extends GameElement implements GameFluid {
             drawingY += getHeight();
         }
 
-        onDraw();
+        onDraw(g2);
     }
     
-    public abstract void onDraw();
+    public abstract void onDraw(Graphics2D g2);
 
 }

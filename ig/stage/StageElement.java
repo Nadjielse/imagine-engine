@@ -1,14 +1,18 @@
-package ig.game;
-
-import ig.sprite.*;
+package ig.stage;
 
 /**
- * Super class for game elements like
+ * Super class for stage elements like
  * game objects, scenarios or cameras.
  * 
  * @author Daniel O Sousa
  */
-public abstract class GameElement {
+public abstract class StageElement {
+
+    /**
+     * The stage where this
+     * element is used.
+     */
+    private Stage stage;
 
     /**
      * The x coordinate.
@@ -31,12 +35,6 @@ public abstract class GameElement {
     private int height;
 
     /**
-     * A frame manager to store and
-     * manage the sprite sheet.
-     */
-    private FrameManager frameManager;
-
-    /**
      * The speed on the x axis.
      */
     private int xSpeed = 0;
@@ -47,8 +45,29 @@ public abstract class GameElement {
     private int ySpeed = 0;
 
     /**
+     * Sets the stage of this
+     * {@code StageElement}.
+     * 
+     * @param stage the stage to be set
+     */
+    public void setStage(Stage stage) {
+        this.stage = stage;
+    }
+
+    /**
+     * Returns the stage of this
+     * {@code StageElement}.
+     * 
+     * @return the stage of this
+     * {@code StageElement}
+     */
+    public Stage getStage() {
+        return this.stage;
+    }
+
+    /**
      * Sets the x coordinate of this
-     * {@code GameElement}.
+     * {@code StageElement}.
      * 
      * @param x the x coordinate
      */
@@ -58,7 +77,7 @@ public abstract class GameElement {
 
     /**
      * Increments the x coordinate
-     * of this {@code GameElement}
+     * of this {@code StageElement}
      * by the amount specified by
      * the {@code value} argument.
      * 
@@ -71,7 +90,7 @@ public abstract class GameElement {
 
     /**
      * Decrements the x coordinate
-     * of this {@code GameElement}
+     * of this {@code StageElement}
      * by the amount specified by
      * the {@code value} argument.
      * 
@@ -84,7 +103,7 @@ public abstract class GameElement {
 
     /**
      * Returns the x coordinate of this
-     * {@code GameElement}.
+     * {@code StageElement}.
      * 
      * @return the x coordinate
      */
@@ -94,7 +113,7 @@ public abstract class GameElement {
 
     /**
      * Sets the y coordinate of this
-     * {@code GameElement}.
+     * {@code StageElement}.
      * 
      * @param y the y coordinate
      */
@@ -104,7 +123,7 @@ public abstract class GameElement {
 
     /**
      * Increments the y coordinate
-     * of this {@code GameElement}
+     * of this {@code StageElement}
      * by the amount specified by
      * the {@code value} argument.
      * 
@@ -117,7 +136,7 @@ public abstract class GameElement {
 
     /**
      * Decrements the y coordinate
-     * of this {@code GameElement}
+     * of this {@code StageElement}
      * by the amount specified by
      * the {@code value} argument.
      * 
@@ -130,7 +149,7 @@ public abstract class GameElement {
 
     /**
      * Returns the y coordinate of this
-     * {@code GameElement}.
+     * {@code StageElement}.
      * 
      * @return the y coordinate
      */
@@ -140,7 +159,7 @@ public abstract class GameElement {
 
     /**
      * Sets the x and y coordinates of this
-     * {@code GameElement}.
+     * {@code StageElement}.
      * 
      * @param x the x coordinate
      * @param y the y coordinate
@@ -151,7 +170,7 @@ public abstract class GameElement {
     }
 
     /**
-     * Sets the width of this {@code GameElement}
+     * Sets the width of this {@code StageElement}
      * if the passed {@code width} is not negative.
      * If it is negative, throws an exception.
      * 
@@ -169,7 +188,7 @@ public abstract class GameElement {
     }
 
     /**
-     * Returns the width of this {@code GameElement}.
+     * Returns the width of this {@code StageElement}.
      * 
      * @return the width dimension
      */
@@ -178,7 +197,7 @@ public abstract class GameElement {
     }
 
     /**
-     * Sets the height of this {@code GameElement}
+     * Sets the height of this {@code StageElement}
      * if the passed {@code height} is not negative.
      * If it is negative, throws an exception.
      * 
@@ -196,7 +215,7 @@ public abstract class GameElement {
     }
 
     /**
-     * Returns the height of this {@code GameElement}.
+     * Returns the height of this {@code StageElement}.
      * 
      * @return the height dimension
      */
@@ -205,7 +224,7 @@ public abstract class GameElement {
     }
 
     /**
-     * Sets the width and height of this {@code GameElement},
+     * Sets the width and height of this {@code StageElement},
      * respectively, if they are not negative. If one of
      * the arguments is negative, an exception will be
      * thrown.
@@ -224,7 +243,7 @@ public abstract class GameElement {
     /**
      * Returns the y coordinate of
      * the top boundary of
-     * this {@code GameElement}.
+     * this {@code StageElement}.
      * 
      * @return the top coordinate
      */
@@ -235,7 +254,7 @@ public abstract class GameElement {
     /**
      * Returns the x coordinate of
      * the right boundary of
-     * this {@code GameElement}.
+     * this {@code StageElement}.
      * 
      * @return the right coordinate
      */
@@ -246,7 +265,7 @@ public abstract class GameElement {
     /**
      * Returns the y coordinate of
      * the bottom boundary of
-     * this {@code GameElement}.
+     * this {@code StageElement}.
      * 
      * @return the bottom coordinate
      */
@@ -257,7 +276,7 @@ public abstract class GameElement {
     /**
      * Returns the x coordinate of
      * the left boundary of
-     * this {@code GameElement}.
+     * this {@code StageElement}.
      * 
      * @return the left coordinate
      */
@@ -266,170 +285,8 @@ public abstract class GameElement {
     }
 
     /**
-     * Creates a new {@code FrameManager} to
-     * manage the passed {@code SpriteSheet}.
-     * 
-     * @param spriteSheet the {@code SpriteSheet}
-     * which the {@code frameManager} will manage
-     */
-    private void createFrameManager(SpriteSheet spriteSheet) {
-        this.frameManager = new FrameManager(spriteSheet);
-    }
-
-    /**
-     * Sets the sprite sheet that will
-     * be used by this {@code GameElement}.
-     * 
-     * @param spriteSheet the sprite sheet
-     * to be set
-     */
-    public void setSpriteSheet(SpriteSheet spriteSheet) {
-        if(spriteSheet == null) {
-            this.frameManager = null;
-        } else {
-            createFrameManager(spriteSheet);
-        }
-    }
-
-    /**
-     * Returns the {@code SpriteSheet} of
-     * this {@code GameElement}.
-     * 
-     * @return the {@code spriteSheet}
-     */
-    public SpriteSheet getSpriteSheet() {
-        if(frameManager != null) {
-            return frameManager.getSpriteSheet();
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * Sets the column of this {@code GameElement}'s
-     * {@code spriteSheet} where to select a frame from.
-     * <p>
-     * If the passed {@code frameX} is invalid (is less
-     * than {@code 0} or greater or equal to the amount of
-     * columns of the sprite sheet) this method won't
-     * do anything.
-     * 
-     * @param frameX the column of the frame to select
-     */
-    public void setFrameX(int frameX) {
-        if(frameManager != null) {
-            frameManager.setFrameX(frameX);
-        }
-    }
-
-    /**
-     * Selects the next frame on the x axis
-     * of this {@code GameElement}'s
-     * {@code SpriteSheet}.
-     */
-    public void nextFrameX() {
-        if(frameManager != null) {
-            frameManager.nextFrameX();
-        }
-    }
-
-    /**
-     * Selects the previous frame on the x axis
-     * of this {@code GameElement}'s
-     * {@code SpriteSheet}.
-     */
-    public void previousFrameX() {
-        if(frameManager != null) {
-            frameManager.previousFrameX();
-        }
-    }
-
-    /**
-     * Returns the column of this {@code GameObject}'s
-     * {@code SpriteSheet} where the current frame is
-     * located.
-     * 
-     * @return the column where the current frame is
-     */
-    public int getFrameX() {
-        if(frameManager != null) {
-            return frameManager.getFrameX();
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * Sets the row of this {@code GameElement}'s
-     * {@code spriteSheet} where to select a frame from.
-     * <p>
-     * If the passed {@code frameY} is invalid (is less
-     * than {@code 0} or greater or equal to the amount of
-     * rows of the sprite sheet) this method won't
-     * do anything.
-     * 
-     * @param frameY the row of the frame to select
-     */
-    public void setFrameY(int frameY) {
-        if(frameManager != null) {
-            frameManager.setFrameY(frameY);
-        }
-    }
-
-    /**
-     * Selects the next frame on the y axis
-     * of this {@code GameElement}'s
-     * {@code SpriteSheet}.
-     */
-    public void nextFrameY() {
-        if(frameManager != null) {
-            frameManager.nextFrameY();
-        }
-    }
-
-    /**
-     * Selects the previous frame on the y axis
-     * of this {@code GameElement}'s
-     * {@code SpriteSheet}.
-     */
-    public void previousFrameY() {
-        if(frameManager != null) {
-            frameManager.previousFrameY();
-        }
-    }
-
-    /**
-     * Returns the row of this {@code GameElement}'s
-     * {@code SpriteSheet} where the current frame is
-     * located.
-     * 
-     * @return the row where the current frame is
-     */
-    public int getFrameY() {
-        if(frameManager != null) {
-            return frameManager.getFrameY();
-        } else {
-            return 0;
-        }
-    }
-
-    /**
-     * Returns the current frame of this
-     * {@code GameElement}'s {@code SpriteSheet}.
-     * 
-     * @return the current frame
-     */
-    public Sprite getCurrentFrame() {
-        if(frameManager != null) {
-            return frameManager.getCurrentFrame();
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Sets the speed on the x axis of
-     * this {@code GameElement} to
+     * this {@code StageElement} to
      * the passed {@code xSpeed}.
      * 
      * @param xSpeed the speed to be set
@@ -440,7 +297,7 @@ public abstract class GameElement {
 
     /**
      * Increments the speed on the x axis of
-     * this {@code GameElement} by the value
+     * this {@code StageElement} by the value
      * specified by the {@code value} argument.
      * 
      * @param value the value to
@@ -452,7 +309,7 @@ public abstract class GameElement {
 
     /**
      * Decrements the speed on the x axis of
-     * this {@code GameElement} by the value
+     * this {@code StageElement} by the value
      * specified by the {@code value} argument.
      * 
      * @param value the value to
@@ -464,7 +321,7 @@ public abstract class GameElement {
 
     /**
      * Returns the speed of this
-     * {@code GameElement} on
+     * {@code StageElement} on
      * the x axis.
      * 
      * @return the x speed
@@ -475,7 +332,7 @@ public abstract class GameElement {
 
     /**
      * Sets the speed on the y axis of
-     * this {@code GameElement} to
+     * this {@code StageElement} to
      * the passed {@code ySpeed}.
      * 
      * @param ySpeed the speed to be set
@@ -486,7 +343,7 @@ public abstract class GameElement {
 
     /**
      * Increments the speed on the y axis of
-     * this {@code GameElement} by the value
+     * this {@code StageElement} by the value
      * specified by the {@code value} argument.
      * 
      * @param value the value to
@@ -498,7 +355,7 @@ public abstract class GameElement {
 
     /**
      * Decrements the speed on the y axis of
-     * this {@code GameElement} by the value
+     * this {@code StageElement} by the value
      * specified by the {@code value} argument.
      * 
      * @param value the value to
@@ -510,7 +367,7 @@ public abstract class GameElement {
 
     /**
      * Returns the speed of this
-     * {@code GameElement} on
+     * {@code StageElement} on
      * the y axis.
      * 
      * @return the y speed

@@ -3,7 +3,7 @@ package ig.object;
 import java.awt.Color;
 import java.awt.Graphics2D;
 
-import ig.game.GameElement;
+import ig.stage.AnimatableStageElement;
 import ig.flow.GameFluid;
 import ig.sprite.SpriteSheet;
 
@@ -12,7 +12,7 @@ import ig.sprite.SpriteSheet;
  * 
  * @author Daniel O Sousa
  */
-public abstract class GameObject extends GameElement implements GameFluid {
+public abstract class GameObject extends AnimatableStageElement implements GameFluid {
 
     /**
      * The color with which this {@code GameObject}
