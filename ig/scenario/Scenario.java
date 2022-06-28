@@ -4,38 +4,25 @@ import java.awt.Graphics2D;
 
 import ig.stage.AnimatableStageElement;
 import ig.flow.GameFluid;
-import ig.stage.Stage;
+import ig.scenario.type.*;
 import ig.sprite.SpriteSheet;
-import ig.game.Game;
 
 public abstract class Scenario extends AnimatableStageElement implements GameFluid {
 
-    private Stage stage;
     private int xParallaxSpeed = 100;
     private int yParallaxSpeed = 100;
-    private boolean repeatX = true;
-    private boolean repeatY = true;
+    private ScenarioType type;
 
     public Scenario(SpriteSheet spriteSheet) {
-        setCoordinates(0, 0);
-        setSize(spriteSheet.getSpriteWidth(), spriteSheet.getSpriteHeight());
         setSpriteSheet(spriteSheet);
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
-
-    public Stage getStage() {
-        return this.stage;
-    }
-
-    public Game getGame() {
-        if(getStage() == null) {
-            return null;
-        } else {
-            return getStage().getGame();
+        setCoordinates(0, 0);
+        if(spriteSheet != null) {
+            setSize (
+                spriteSheet.getSpriteWidth(),
+                spriteSheet.getSpriteHeight()
+            );
         }
+        setTypeRepeatXY();
     }
 
     public void setXParallaxSpeed(int xParallaxSpeed) {
@@ -54,53 +41,32 @@ public abstract class Scenario extends AnimatableStageElement implements GameFlu
         return this.yParallaxSpeed;
     }
 
-    public void setRepeatX(boolean repeatX) {
-        this.repeatX = repeatX;
-    }
-
-    public boolean getRepeatX() {
-        return this.repeatX;
-    }
-
-    public void setRepeatY(boolean repeatY) {
-        this.repeatY = repeatY;
-    }
-
-    public boolean getRepeatY() {
-        return this.repeatY;
-    }
-
-    public boolean isVisible() {
-        if(getGame() == null) {
-            return false;
+    public void setType(ScenarioType type) {
+        if(type == null) {
+            throw new IllegalArgumentException("type cannot be null");
         }
 
-        if (
-            getBottom() > 0 &&
-            getTop() < getGame().getGamePanelHeight() &&
-            getLeft() < getGame().getGamePanelWidth() &&
-            getRight() > 0
-        ) {
-            return true;
-        }
+        this.type = type;
+    }
 
-        if (
-            getRepeatX() &&
-            getBottom() > 0 &&
-            getTop() < getGame().getGamePanelHeight()
-        ) {
-            return true;
-        }
+    public void setTypeNoRepeat() {
+        setType(new NoRepeat(this));
+    }
 
-        if (
-            getRepeatY() &&
-            getLeft() < getGame().getGamePanelWidth() &&
-            getRight() > 0
-        ) {
-            return true;
-        }
+    public void setTypeRepeatX() {
+        setType(new RepeatX(this));
+    }
 
-        return false;
+    public void setTypeRepeatY() {
+        setType(new RepeatY(this));
+    }
+
+    public void setTypeRepeatXY() {
+        setType(new RepeatXY(this));
+    }
+
+    public String getType() {
+        return this.type.getName();
     }
 
     @Override
@@ -123,12 +89,7 @@ public abstract class Scenario extends AnimatableStageElement implements GameFlu
 
     @Override
     public void draw(Graphics2D g2) {
-
-        // Draw will occur only if the game is accessible,
-        // and the scenario is inside the game panel or is
-        // horizontally aligned with repeatX true or is
-        // vertically aligned with repeatY true
-        if(!isVisible()) {
+        if(getCurrentFrame() == null) {
             onDraw(g2);
             return;
         }
@@ -137,23 +98,7 @@ public abstract class Scenario extends AnimatableStageElement implements GameFlu
             return;
         }
 
-        // IF REPEATX AND REPEATY ARE TRUE
-        int drawingY = getY() <= 0 ? getY() % getHeight() : getY() % getHeight() - getHeight();
-        while(drawingY < getGame().getGamePanelHeight()) {
-            int drawingX = getX() <= 0 ? getX() % getWidth() : getX() % getWidth() - getWidth();
-            while(drawingX < getGame().getGamePanelWidth()) {
-                g2.drawImage (
-                    getCurrentFrame().getImage(),
-                    drawingX,
-                    drawingY,
-                    getWidth(),
-                    getHeight(),
-                    null
-                );
-                drawingX += getWidth();
-            }
-            drawingY += getHeight();
-        }
+        type.draw(g2);
 
         onDraw(g2);
     }

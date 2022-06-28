@@ -1,5 +1,7 @@
 package ig.stage;
 
+import ig.game.Game;
+
 /**
  * Super class for stage elements like
  * game objects, scenarios or cameras.
@@ -63,6 +65,51 @@ public abstract class StageElement {
      */
     public Stage getStage() {
         return this.stage;
+    }
+
+    /**
+     * Returns the game associated
+     * with this {@code StageElement}.
+     * 
+     * @return the game of this
+     * {@code StageElement}
+     */
+    public Game getGame() {
+        if(stage != null) {
+            return stage.getGame();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the width of the panel
+     * where this {@code StageElement}
+     * would be exhibited.
+     * 
+     * @return the game panel width
+     */
+    public int getGamePanelWidth() {
+        if(getGame() != null) {
+            return getGame().getGamePanelWidth();
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns the height of the panel
+     * where this {@code StageElement}
+     * would be exhibited.
+     * 
+     * @return the game panel height
+     */
+    public int getGamePanelHeight() {
+        if(getGame() != null) {
+            return getGame().getGamePanelHeight();
+        } else {
+            return 0;
+        }
     }
 
     /**
