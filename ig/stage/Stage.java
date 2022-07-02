@@ -8,9 +8,6 @@ import ig.game.Game;
 import ig.scenario.Scenario;
 import ig.object.GameObject;
 
-// TODO draw backgrounds and foregrounds
-// TODO throw exception if addNthBack/Foreground receives a invalid position
-// TODO throw exception if removeNthBack/Foreground receives a invalid position
 /**
  * Class for creating a stage for a {@code Game}.
  * 
@@ -18,6 +15,9 @@ import ig.object.GameObject;
  */
 public abstract class Stage implements GameFluid {
 
+    /**
+     * {@code Game} which has this {@code Stage}.
+     */
     private Game game;
 
     /**
@@ -57,10 +57,24 @@ public abstract class Stage implements GameFluid {
 
     }
 
+    /**
+     * Sets a reference to the {@code Game}
+     * that has this {@code Stage}.
+     * 
+     * @param game the game to which this
+     * {@code Stage} belongs
+     */
     public void setGame(Game game) {
         this.game = game;
     }
 
+    /**
+     * Returns the {@code Game} to which
+     * this {@code Stage} belongs.
+     * 
+     * @return the {@code Game} of
+     * this {@code Stage}
+     */
     public Game getGame() {
         return this.game;
     }
@@ -89,11 +103,16 @@ public abstract class Stage implements GameFluid {
      * or equal to {@code 0}.
      * 
      * @param width the width to be set
+     * 
+     * @throws IllegalArgumentException if the
+     * {@code width} argument is negative
      */
     public void setWidth(int width) {
-        if(width >= 0) {
-            this.width = width;
+        if(width < 0) {
+            throw new IllegalArgumentException("width cannot be negative");
         }
+
+        this.width = width;
     }
 
     /**
@@ -111,11 +130,16 @@ public abstract class Stage implements GameFluid {
      * or equal to {@code 0}.
      * 
      * @param height the height to be set
+     * 
+     * @throws IllegalArgumentException if the
+     * {@code height} argument is negative
      */
     public void setHeight(int height) {
-        if(height >= 0) {
-            this.height = height;
+        if(height < 0) {
+            throw new IllegalArgumentException("height cannot be negative");
         }
+
+        this.height = height;
     }
 
     /**
@@ -134,8 +158,12 @@ public abstract class Stage implements GameFluid {
      * 
      * @param width the width to be set
      * @param height the height to be set
+     * 
+     * @throws IllegalArgumentException if the
+     * {@code width} or {@code height} arguments
+     * are negative
      */
-    public void setDimensions(int width, int height) {
+    public void setSize(int width, int height) {
         setWidth(width);
         setHeight(height);
     }
@@ -143,10 +171,34 @@ public abstract class Stage implements GameFluid {
     /**
      * Adds a background to this {@code Stage}. This
      * background will be the furthest from the camera.
+     * If the {@code background} argument is {@code null},
+     * though, it won't be added.
      * 
      * @param background the background to be added
+     * 
+     * @throws IllegalArgumentException if the {@code background}
+     * argument is {@code null}
      */
-    public void addFurtherBackground(Scenario background) {
+    public void addBackground(Scenario background) {
+        addFurthestBackground(background);
+    }
+
+    /**
+     * Adds a background to this {@code Stage}. This
+     * background will be the furthest from the camera.
+     * If the {@code background} argument is {@code null},
+     * though, it won't be added.
+     * 
+     * @param background the background to be added
+     * 
+     * @throws IllegalArgumentException if the {@code background}
+     * argument is {@code null}
+     */
+    public void addFurthestBackground(Scenario background) {
+        if(background == null) {
+            throw new IllegalArgumentException("cannot add null background");
+        }
+
         backgrounds.add(background);
     }
 
@@ -160,18 +212,42 @@ public abstract class Stage implements GameFluid {
      * 
      * @param position the position where to add this background
      * @param background the background to be added
+     * 
+     * @throws IndexOutOfBoundsException if the {@code position}
+     * argument is less than {@code 0} or greater than the
+     * amount of backgrounds already added to this {@code Stage}
+     * @throws IllegalArgumentException if the {@code background}
+     * argument is {@code null}
      */
     public void addNthBackground(int position, Scenario background) {
+        if(position < 0 || position > backgrounds.size()) {
+            throw new IndexOutOfBoundsException (
+                "cannot add background to position " + position +
+                " (Only " + backgrounds.size() + " backgrounds)"
+            );
+        }
+        if(background == null) {
+            throw new IllegalArgumentException("cannot add null background");
+        }
+
         backgrounds.add(position, background);
     }
 
     /**
      * Adds a background to this {@code Stage}. This
      * background will be the closest to the camera.
+     * If it is {@code null}, though, it won't be added.
      * 
      * @param background the background to be added
+     * 
+     * @throws IllegalArgumentException if the {@code background}
+     * argument is {@code null}
      */
-    public void addCloserBackground(Scenario background) {
+    public void addClosestBackground(Scenario background) {
+        if(background == null) {
+            throw new IllegalArgumentException("cannot add null background");
+        }
+
         backgrounds.add(0, background);
     }
 
@@ -180,9 +256,10 @@ public abstract class Stage implements GameFluid {
      * {@code Stage}. If it already has no backgrounds
      * this method won't do anything.
      * 
-     * @return the removed background
+     * @return the removed background or {@code null}
+     * if no background is removed
      */
-    public Scenario removeFurtherBackground() {
+    public Scenario removeFurthestBackground() {
         if(backgrounds.isEmpty()) {
             return null;
         }
@@ -200,11 +277,22 @@ public abstract class Stage implements GameFluid {
      * 
      * @param position the position where to remove a background from
      * 
-     * @return the removed background
+     * @return the removed background or {@code null} if no
+     * background is removed
+     * 
+     * @throws IndexOutOfBoundsException if the {@code position}
+     * argument is less than {@code 0} or greater or equal to the
+     * amount of backgrounds in this {@code Stage}
      */
     public Scenario removeNthBackground(int position) {
         if(backgrounds.isEmpty()) {
             return null;
+        }
+        if(position < 0 || position >= backgrounds.size()) {
+            throw new IndexOutOfBoundsException (
+                "cannot remove background in position " + position +
+                " (Only " + backgrounds.size() + " backgrounds)"
+            );
         }
 
         return backgrounds.remove(position);
@@ -225,9 +313,10 @@ public abstract class Stage implements GameFluid {
      * {@code Stage}. If it already has no
      * backgrounds this method won't do anything.
      * 
-     * @return the removed background
+     * @return the removed background or {@code null}
+     * if no background is removed
      */
-    public Scenario removeCloserBackground() {
+    public Scenario removeClosestBackground() {
         if(backgrounds.isEmpty()) {
             return null;
         }
@@ -245,12 +334,146 @@ public abstract class Stage implements GameFluid {
     }
 
     /**
+     * Returns the background specified by the
+     * {@code position} argument. This argument
+     * means how far the background is from the
+     * camera. It must be a number between {@code 0}
+     * and the amount of backgrounds in this
+     * {@code Stage} minus {@code 1}.
+     * 
+     * @param position the position of the
+     * background to get
+     * 
+     * @return the background specified by the
+     * {@code position} argument
+     * 
+     * @throws IndexOutOfBoundsException if the
+     * {@code position} argument is less than {@code 0}
+     * or greater or equal to the amount of backgrounds
+     * in this {@code Stage}
+     */
+    public Scenario getBackground(int position) {
+        if(position < 0 || position >= backgrounds.size()) {
+            throw new IndexOutOfBoundsException (
+                "cannot get background in position " + position +
+                " (Only " + backgrounds.size() + " backgrounds)"
+            );
+        }
+
+        return backgrounds.get(position);
+    }
+
+    /**
+     * Adds a {@code GameObject} to the
+     * objects of this {@code Stage} if
+     * the {@code object} argument isn't
+     * {@code null}.
+     * 
+     * @param object the {@code GameObject}
+     * to be added
+     * 
+     * @throws IllegalArgumentException if the
+     * {@code object} argument is {@code null}
+     */
+    public void addObject(GameObject object) {
+        if(object == null) {
+            throw new IllegalArgumentException("cannot add null object");
+        }
+
+        objects.add(object);
+    }
+
+    /**
+     * Removes the specified {@code GameObject}
+     * of this {@code Stage} if it is present.
+     * 
+     * @param object the {@code GameObject} to
+     * be removed
+     */
+    public GameObject removeObject(int position) {
+        if(position < 0 || position >= objects.size()) {
+            throw new IndexOutOfBoundsException (
+                "cannot remove object from position " + position +
+                " (Only " + objects.size() + " objects)"
+            );
+        }
+
+        return objects.remove(position);
+    }
+
+    /**
+     * Removes the specified {@code GameObject}
+     * of this {@code Stage} if it is present.
+     * 
+     * @param object the {@code GameObject} to
+     * be removed
+     */
+    public void removeObject(GameObject object) {
+        objects.remove(object);
+    }
+
+    /**
+     * Returns an {@code ArrayList} containing
+     * the objects of this {@code Stage}.
+     * 
+     * @return the objects of this {@code Stage}
+     */
+    public ArrayList<GameObject> getObjects() {
+        return objects;
+    }
+
+    /**
+     * Returns the {@code GameObject} specified
+     * by the {@code position} argument.
+     * 
+     * @param position the position where to
+     * get the object from
+     * 
+     * @return the object of this {@code Stage}
+     * specified by the position {@code position}
+     */
+    public GameObject getObject(int position) {
+        if(position < 0 || position >= objects.size()) {
+            throw new IndexOutOfBoundsException (
+                "cannot get object from position " + position +
+                " (Only " + objects.size() + " objects)"
+            );
+        }
+
+        return objects.get(position);
+    }
+
+    /**
      * Adds a foreground to this {@code Stage}. This
      * foreground will be the furthest from the camera.
+     * If the {@code foreground} argument is {@code null},
+     * though, it won't be added.
      * 
      * @param foreground the foreground to be added
+     * 
+     * @throws IllegalArgumentException if the {@code foreground}
+     * argument is {@code null}
      */
-    public void addFurtherForeground(Scenario foreground) {
+    public void addForeground(Scenario foreground) {
+        addFurthestForeground(foreground);
+    }
+
+    /**
+     * Adds a foreground to this {@code Stage}. This
+     * foreground will be the furthest from the camera.
+     * If the {@code foreground} argument is {@code null},
+     * though, it won't be added.
+     * 
+     * @param foreground the foreground to be added
+     * 
+     * @throws IllegalArgumentException if the {@code foreground}
+     * argument is {@code null}
+     */
+    public void addFurthestForeground(Scenario foreground) {
+        if(foreground == null) {
+            throw new IllegalArgumentException("cannot add null foreground");
+        }
+
         foregrounds.add(foreground);
     }
 
@@ -264,18 +487,42 @@ public abstract class Stage implements GameFluid {
      * 
      * @param position the position where to add this foreground
      * @param foreground the foreground to be added
+     * 
+     * @throws IndexOutOfBoundsException if the {@code position}
+     * argument is less than {@code 0} or greater than the
+     * amount of foregrounds already added to this {@code Stage}
+     * @throws IllegalArgumentException if the {@code foreground}
+     * argument is {@code null}
      */
     public void addNthForeground(int position, Scenario foreground) {
+        if(position < 0 || position > foregrounds.size()) {
+            throw new IndexOutOfBoundsException (
+                "cannot add foreground to position " + position +
+                " (Only " + foregrounds.size() + " foregrounds)"
+            );
+        }
+        if(foreground == null) {
+            throw new IllegalArgumentException("cannot add null foreground");
+        }
+
         foregrounds.add(position, foreground);
     }
 
     /**
      * Adds a foreground to this {@code Stage}. This
      * foreground will be the closest to the camera.
+     * If it is {@code null}, though, it won't be added.
      * 
      * @param foreground the foreground to be added
+     * 
+     * @throws IllegalArgumentException if the {@code foreground}
+     * argument is {@code null}
      */
-    public void addCloserForeground(Scenario foreground) {
+    public void addClosestForeground(Scenario foreground) {
+        if(foreground == null) {
+            throw new IllegalArgumentException("cannot add null foreground");
+        }
+
         foregrounds.add(0, foreground);
     }
 
@@ -284,9 +531,10 @@ public abstract class Stage implements GameFluid {
      * {@code Stage}. If it already has no foregrounds
      * this method won't do anything.
      * 
-     * @return the removed foreground
+     * @return the removed foreground or {@code null}
+     * if no foreground is removed
      */
-    public Scenario removeFurtherForeground() {
+    public Scenario removeFurthestForeground() {
         if(foregrounds.isEmpty()) {
             return null;
         }
@@ -304,11 +552,22 @@ public abstract class Stage implements GameFluid {
      * 
      * @param position the position where to remove a foreground from
      * 
-     * @return the removed foreground
+     * @return the removed foreground or {@code null} if no
+     * foreground is removed
+     * 
+     * @throws IndexOutOfBoundsException if the {@code position}
+     * argument is less than {@code 0} or greater or equal to the
+     * amount of foregrounds in this {@code Stage}
      */
     public Scenario removeNthForeground(int position) {
         if(foregrounds.isEmpty()) {
             return null;
+        }
+        if(position < 0 || position >= foregrounds.size()) {
+            throw new IndexOutOfBoundsException (
+                "cannot remove foreground in position " + position +
+                " (Only " + foregrounds.size() + " foregrounds)"
+            );
         }
 
         return foregrounds.remove(position);
@@ -329,9 +588,10 @@ public abstract class Stage implements GameFluid {
      * {@code Stage}. If it already has no
      * foregrounds this method won't do anything.
      * 
-     * @return the removed foreground
+     * @return the removed foreground or {@code null}
+     * if no foreground is removed
      */
-    public Scenario removeCloserForeground() {
+    public Scenario removeClosestForeground() {
         if(foregrounds.isEmpty()) {
             return null;
         }
@@ -349,34 +609,39 @@ public abstract class Stage implements GameFluid {
     }
 
     /**
-     * Adds a {@code GameObject} to the
-     * objects of this {@code Stage}.
+     * Returns the foreground specified by the
+     * {@code position} argument. This argument
+     * means how far the foreground is from the
+     * camera. It must be a number between {@code 0}
+     * and the amount of foregrounds in this
+     * {@code Stage} minus {@code 1}.
      * 
-     * @param object the {@code GameObject} to be added
+     * @param position the position of the
+     * foreground to get
+     * 
+     * @return the foreground specified by the
+     * {@code position} argument
+     * 
+     * @throws IndexOutOfBoundsException if the
+     * {@code position} argument is less than {@code 0}
+     * or greater or equal to the amount of foregrounds
+     * in this {@code Stage}
      */
-    public void addObject(GameObject object) {
-        objects.add(object);
+    public Scenario getForeground(int position) {
+        if(position < 0 || position >= foregrounds.size()) {
+            throw new IndexOutOfBoundsException (
+                "cannot get foreground in position " + position +
+                " (Only " + foregrounds.size() + " foregrounds)"
+            );
+        }
+
+        return foregrounds.get(position);
     }
 
-    /**
-     * Removes the specified {@code GameObject}
-     * of this {@code Stage}.
-     * 
-     * @param object the {@code GameObject} to be
-     *               removed
-     */
-    public void removeObject(GameObject object) {
-        objects.remove(object);
-    }
+    //TODO add remaining methods
 
-    /**
-     * Returns an {@code ArrayList} containing
-     * the objects of this {@code Stage}.
-     * 
-     * @return the objects of this {@code Stage}
-     */
-    public ArrayList<GameObject> getObjects() {
-        return objects;
+    private void startBackgrounds() {
+
     }
 
     private void startObjects() {
