@@ -196,6 +196,7 @@ public abstract class Stage implements GameFluid {
             throw new IllegalArgumentException("cannot add null background");
         }
 
+        background.setStage(this);
         backgrounds.add(background);
     }
 
@@ -227,6 +228,7 @@ public abstract class Stage implements GameFluid {
             throw new IllegalArgumentException("cannot add null background");
         }
 
+        background.setStage(this);
         backgrounds.add(position, background);
     }
 
@@ -245,6 +247,7 @@ public abstract class Stage implements GameFluid {
             throw new IllegalArgumentException("cannot add null background");
         }
 
+        background.setStage(this);
         backgrounds.add(0, background);
     }
 
@@ -261,7 +264,9 @@ public abstract class Stage implements GameFluid {
             return null;
         }
 
-        return backgrounds.remove(backgrounds.size() - 1);
+        Scenario removedBackground = backgrounds.remove(backgrounds.size() - 1);
+        removedBackground.setStage(null);
+        return removedBackground;
     }
 
     /**
@@ -292,7 +297,9 @@ public abstract class Stage implements GameFluid {
             );
         }
 
-        return backgrounds.remove(position);
+        Scenario removedBackground = backgrounds.remove(position);
+        removedBackground.setStage(null);
+        return removedBackground;
     }
 
     /**
@@ -302,7 +309,9 @@ public abstract class Stage implements GameFluid {
      * @param background the background to be removed
      */
     public void removeBackground(Scenario background) {
-        backgrounds.remove(background);
+        if(backgrounds.remove(background)) {
+            background.setStage(null);
+        }
     }
 
     /**
@@ -318,7 +327,9 @@ public abstract class Stage implements GameFluid {
             return null;
         }
 
-        return backgrounds.remove(0);
+        Scenario removedBackground = backgrounds.remove(0);
+        removedBackground.setStage(null);
+        return removedBackground;
     }
 
     /**
@@ -377,6 +388,7 @@ public abstract class Stage implements GameFluid {
             throw new IllegalArgumentException("cannot add null object");
         }
 
+        object.setStage(this);
         objects.add(object);
     }
 
@@ -395,7 +407,9 @@ public abstract class Stage implements GameFluid {
             );
         }
 
-        return objects.remove(position);
+        GameObject removedObject = objects.remove(position);
+        removedObject.setStage(null);
+        return removedObject;
     }
 
     /**
@@ -406,7 +420,9 @@ public abstract class Stage implements GameFluid {
      * be removed
      */
     public void removeObject(GameObject object) {
-        objects.remove(object);
+        if(objects.remove(object)) {
+            object.setStage(null);
+        }
     }
 
     /**
@@ -471,6 +487,7 @@ public abstract class Stage implements GameFluid {
             throw new IllegalArgumentException("cannot add null foreground");
         }
 
+        foreground.setStage(this);
         foregrounds.add(foreground);
     }
 
@@ -502,6 +519,7 @@ public abstract class Stage implements GameFluid {
             throw new IllegalArgumentException("cannot add null foreground");
         }
 
+        foreground.setStage(this);
         foregrounds.add(position, foreground);
     }
 
@@ -520,6 +538,7 @@ public abstract class Stage implements GameFluid {
             throw new IllegalArgumentException("cannot add null foreground");
         }
 
+        foreground.setStage(this);
         foregrounds.add(0, foreground);
     }
 
@@ -536,7 +555,9 @@ public abstract class Stage implements GameFluid {
             return null;
         }
 
-        return foregrounds.remove(foregrounds.size() - 1);
+        Scenario removedForeground = foregrounds.remove(foregrounds.size() - 1);
+        removedForeground.setStage(null);
+        return removedForeground;
     }
 
     /**
@@ -567,7 +588,9 @@ public abstract class Stage implements GameFluid {
             );
         }
 
-        return foregrounds.remove(position);
+        Scenario removedForeground = foregrounds.remove(position);
+        removedForeground.setStage(null);
+        return removedForeground;
     }
 
     /**
@@ -577,7 +600,9 @@ public abstract class Stage implements GameFluid {
      * @param foreground the foreground to be removed
      */
     public void removeForeground(Scenario foreground) {
-        foregrounds.remove(foreground);
+        if(foregrounds.remove(foreground)) {
+            foreground.setStage(null);
+        }
     }
 
     /**
@@ -593,7 +618,9 @@ public abstract class Stage implements GameFluid {
             return null;
         }
 
-        return foregrounds.remove(0);
+        Scenario removedForeground = foregrounds.remove(0);
+        removedForeground.setStage(null);
+        return removedForeground;
     }
 
     /**
