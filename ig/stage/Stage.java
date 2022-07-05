@@ -8,6 +8,8 @@ import ig.game.Game;
 import ig.scenario.Scenario;
 import ig.object.GameObject;
 
+// TODO camera
+
 /**
  * Class for creating a stage for a {@code Game}.
  * 
@@ -50,12 +52,7 @@ public abstract class Stage implements GameFluid {
      */
     private ArrayList<Scenario> foregrounds = new ArrayList<Scenario>();
 
-    /**
-     * Constructor for a {@code Stage}.
-     */
-    public Stage() {
-
-    }
+    
 
     /**
      * Sets a reference to the {@code Game}
@@ -638,24 +635,69 @@ public abstract class Stage implements GameFluid {
         return foregrounds.get(position);
     }
 
-    //TODO add remaining methods
-
+    /**
+     * Starts every background of this
+     * {@code Stage} from the furthest to
+     * the closest to the camera.
+     */
     private void startBackgrounds() {
-
+        for(int i = backgrounds.size() - 1; i >= 0; i--) {
+            backgrounds.get(i).start();
+        }
     }
 
+    /**
+     * Updates every background of this
+     * {@code Stage} from the furthest to
+     * the closest to the camera.
+     */
+    private void updateBackgrounds() {
+        for(int i = backgrounds.size() - 1; i >= 0; i--) {
+            backgrounds.get(i).update();
+        }
+    }
+
+    /**
+     * Draws every background of this
+     * {@code Stage} from the furthest to
+     * the closest to the camera.
+     * 
+     * @param g2 a {@code Graphics2D} with
+     * which the backgrounds are drawn
+     */
+    private void drawBackgrounds(Graphics2D g2) {
+        for(int i = backgrounds.size() - 1; i >= 0; i--) {
+            backgrounds.get(i).draw(g2);
+        }
+    }
+
+    /**
+     * Starts every object of this
+     * {@code Stage}.
+     */
     private void startObjects() {
         for(GameObject object : objects) {
             object.start();
         }
     }
 
+    /**
+     * Updates every object of this
+     * {@code Stage}.
+     */
     private void updateObjects() {
         for(GameObject object : objects) {
             object.update();
         }
     }
 
+    /**
+     * Draws every object of this
+     * {@code Stage}.
+     * 
+     * @param g2 a {@code Graphics2D} with
+     * which the objects are drawn
+     */
     private void drawObjects(Graphics2D g2) {
         for(GameObject object : objects) {
             object.draw(g2);
@@ -663,8 +705,45 @@ public abstract class Stage implements GameFluid {
     }
 
     /**
+     * Starts every foreground of this
+     * {@code Stage} from the furthest to
+     * the closest to the camera.
+     */
+    private void startForegrounds() {
+        for(int i = foregrounds.size() - 1; i >= 0; i--) {
+            foregrounds.get(i).start();
+        }
+    }
+
+    /**
+     * Updates every foreground of this
+     * {@code Stage} from the furthest to
+     * the closest to the camera.
+     */
+    private void updateForegrounds() {
+        for(int i = foregrounds.size() - 1; i >= 0; i--) {
+            foregrounds.get(i).update();
+        }
+    }
+
+    /**
+     * Draws every foreground of this
+     * {@code Stage} from the furthest to
+     * the closest to the camera.
+     * 
+     * @param g2 a {@code Graphics2D} with
+     * which the foregrounds are drawn
+     */
+    private void drawForegrounds(Graphics2D g2) {
+        for(int i = foregrounds.size() - 1; i >= 0; i--) {
+            foregrounds.get(i).draw(g2);
+        }
+    }
+
+    /**
      * Executes the {@code start} method of
-     * the objects of this {@code Stage}.
+     * the backgrounds, objects and foregrounds
+     * of this {@code Stage}.
      * <p>
      * Also Executes this {@code Stage}'s
      * {@code onStart} method.
@@ -672,7 +751,9 @@ public abstract class Stage implements GameFluid {
      * @see #onStart()
      */
     public void start() {
+        startBackgrounds();
         startObjects();
+        startForegrounds();
 
         onStart();
     }
@@ -681,16 +762,14 @@ public abstract class Stage implements GameFluid {
      * This method is used to define what
      * should happen when this {@code Stage}
      * is started.
-     * 
-     * @see #start()
      */
     public abstract void onStart();
 
     /**
      * This method is executed every
      * frame to call the {@code update}
-     * method of the objects of this
-     * {@code Stage}.
+     * method of the backgrounds, objects
+     * and foregrounds of this {@code Stage}.
      * <p>
      * This method also calls this
      * {@code Stage}'s {@code onUpdate}
@@ -699,7 +778,9 @@ public abstract class Stage implements GameFluid {
      * @see #onUpdate()
      */
     public void update() {
+        updateBackgrounds();
         updateObjects();
+        updateForegrounds();
 
         onUpdate();
     }
@@ -708,16 +789,15 @@ public abstract class Stage implements GameFluid {
      * This method is used to define what
      * should happen when this {@code Stage}
      * is updated.
-     * 
-     * @see #update()
      */
     public abstract void onUpdate();
 
     /**
      * This method is executed every frame
      * to call the {@code draw} method of
-     * the objects of this {@code Stage},
-     * passing the {@code g2} argument.
+     * the backgrounds, objects and foregrounds
+     * of this {@code Stage}, passing the
+     * {@code g2} argument.
      * <p>
      * This method also calls this 
      * {@code Stage}'s {@code onDraw} method.
@@ -729,7 +809,9 @@ public abstract class Stage implements GameFluid {
      * @see #onDraw(Graphics2D)
      */
     public void draw(Graphics2D g2) {
+        drawBackgrounds(g2);
         drawObjects(g2);
+        drawForegrounds(g2);
         
         onDraw(g2);
     }
@@ -743,9 +825,7 @@ public abstract class Stage implements GameFluid {
      * do optional customized drawings.
      * 
      * @param g2 a {@code Graphics2D} instance
-     *           to draw with
-     * 
-     * @see #draw(Graphics2D)
+     * to draw with
      */
     public abstract void onDraw(Graphics2D g2);
 
