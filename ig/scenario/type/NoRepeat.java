@@ -67,7 +67,7 @@ public class NoRepeat implements ScenarioType {
 
     /**
      * Draws the {@code Scenario} that has this
-     * {@code ScenarioType} with its x and y
+     * {@code ScenarioType} with its apparent x and y
      * coordinates and width and height dimensions.
      * 
      * @param g2 a {@code Graphics2D} instance used
@@ -77,7 +77,7 @@ public class NoRepeat implements ScenarioType {
     public void draw(Graphics2D g2) {
         g2.drawImage (
             scenario.getCurrentFrame().getImage(),
-            scenario.getX(), scenario.getY(),
+            scenario.getApparentX(), scenario.getApparentY(),
             scenario.getWidth(), scenario.getHeight(),
             null
         );

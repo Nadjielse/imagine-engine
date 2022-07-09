@@ -81,13 +81,13 @@ public class RepeatX implements ScenarioType {
         }
 
         int drawingX =
-            scenario.getX() <= 0 ?
-            scenario.getX() % scenario.getWidth() :
-            scenario.getX() % scenario.getWidth() - scenario.getWidth();
+            scenario.getApparentX() <= 0 ?
+            scenario.getApparentX() % scenario.getWidth() :
+            scenario.getApparentX() % scenario.getWidth() - scenario.getWidth();
         while(drawingX < scenario.getGamePanelWidth()) {
             g2.drawImage (
                 scenario.getCurrentFrame().getImage(),
-                drawingX, scenario.getY(),
+                drawingX, scenario.getApparentY(),
                 scenario.getWidth(), scenario.getHeight(),
                 null
             );

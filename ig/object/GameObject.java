@@ -134,6 +134,28 @@ public abstract class GameObject extends AnimatableStageElement implements GameF
     }
 
     /**
+     * Returns the apparent x coordinate of
+     * this {@code GameObject} when taking into
+     * account the camera position.
+     * 
+     * @return the apparent x coordinate
+     */
+    public int getApparentX() {
+        return getX() - getCameraX();
+    }
+
+    /**
+     * Returns the apparent y coordinate of
+     * this {@code GameObject} when taking into
+     * account the camera position.
+     * 
+     * @return the apparent y coordinate
+     */
+    public int getApparentY() {
+        return getY() - getCameraY();
+    }
+
+    /**
      * Executes the {@code onStart} method.
      * 
      * @see #onStart()
@@ -200,14 +222,14 @@ public abstract class GameObject extends AnimatableStageElement implements GameF
         if(showBoundingBox) {
             g2.setColor(color);
             g2.fillRect (
-                getX(), getY(),
+                getApparentX(), getApparentY(),
                 getWidth(), getHeight()
             );
         }
         if(showSprite && getSpriteSheet() != null) {
             g2.drawImage (
                 getCurrentFrame().getImage(),
-                getX(), getY(),
+                getApparentX(), getApparentY(),
                 getWidth(), getHeight(),
                 null
             );
