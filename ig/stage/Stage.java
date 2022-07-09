@@ -77,6 +77,34 @@ public abstract class Stage implements GameFluid {
     }
 
     /**
+     * Returns the width of the {@code GamePanel}
+     * where this {@code Stage} is exhibited.
+     * 
+     * @return the width of the {@code GamePanel}
+     */
+    public int getGamePanelWidth() {
+        if(game != null) {
+            return game.getGamePanelWidth();
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns the height of the {@code GamePanel}
+     * where this {@code Stage} is exhibited.
+     * 
+     * @return the height of the {@code GamePanel}
+     */
+    public int getGamePanelHeight() {
+        if(game != null) {
+            return game.getGamePanelHeight();
+        } else {
+            return 0;
+        }
+    }
+
+    /**
      * Sets the title of this {@code Stage}.
      * 
      * @param title the title to be set
