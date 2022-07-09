@@ -7,6 +7,7 @@ import ig.flow.GameFluid;
 import ig.game.Game;
 import ig.scenario.Scenario;
 import ig.object.GameObject;
+import ig.camera.Camera;
 
 // TODO camera
 
@@ -52,16 +53,35 @@ public abstract class Stage implements GameFluid {
      */
     private ArrayList<Scenario> foregrounds = new ArrayList<Scenario>();
 
-    
+    /**
+     * The camera of this {@code Stage}.
+     */
+    private Camera camera;
 
     /**
-     * Sets a reference to the {@code Game}
+     * Creates a new {@code Stage} that will
+     * belong to the passed {@code game}.
+     * 
+     * @param game the {@code Game} to which
+     * this {@code Stage} belongs
+     */
+    public Stage(Game game) {
+        storeGame(game);
+        createCamera();
+    }
+
+    /**
+     * Stores the {@code Game}
      * that has this {@code Stage}.
      * 
      * @param game the game to which this
      * {@code Stage} belongs
      */
-    public void setGame(Game game) {
+    private void storeGame(Game game) {
+        if(game == null) {
+            throw new IllegalArgumentException("cannot store null game");
+        }
+
         this.game = game;
     }
 
@@ -688,6 +708,25 @@ public abstract class Stage implements GameFluid {
         }
 
         return foregrounds.get(position);
+    }
+
+    /**
+     * Creates a {@code Camera} for
+     * this {@code Stage}.
+     */
+    private void createCamera() {
+        this.camera = new Camera(this);
+    }
+
+    /**
+     * Returns the {@code Camera} of
+     * this {@code Stage}.
+     * 
+     * @return the {@code Camera} of
+     * this {@code Stage}
+     */
+    public Camera getCamera() {
+        return this.camera;
     }
 
     /**
