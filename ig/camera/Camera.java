@@ -43,6 +43,10 @@ public class Camera extends StageElement implements GameFluid {
         setType(new Static());
     }
 
+    public void setTypeAutoScroll() {
+        setType(new AutoScroll(this));
+    }
+
     public CameraType getType() {
         return this.type;
     }

@@ -9,8 +9,6 @@ import ig.scenario.Scenario;
 import ig.object.GameObject;
 import ig.camera.Camera;
 
-// TODO camera
-
 /**
  * Class for creating a stage for a {@code Game}.
  * 
@@ -835,9 +833,36 @@ public abstract class Stage implements GameFluid {
     }
 
     /**
+     * Starts the camera of this
+     * {@code Stage}.
+     */
+    private void startCamera() {
+        camera.start();
+    }
+
+    /**
+     * Updates the camera of this
+     * {@code Stage}.
+     */
+    private void updateCamera() {
+        camera.update();
+    }
+
+    /**
+     * Draws the camera of this
+     * {@code Stage}.
+     * 
+     * @param g2 a {@code Graphics2D} instance
+     * with which the camera can be drawn
+     */
+    private void drawCamera(Graphics2D g2) {
+        camera.draw(g2);;
+    }
+
+    /**
      * Executes the {@code start} method of
-     * the backgrounds, objects and foregrounds
-     * of this {@code Stage}.
+     * the backgrounds, objects, foregrounds
+     * and camera of this {@code Stage}.
      * <p>
      * Also Executes this {@code Stage}'s
      * {@code onStart} method.
@@ -848,6 +873,7 @@ public abstract class Stage implements GameFluid {
         startBackgrounds();
         startObjects();
         startForegrounds();
+        startCamera();
 
         onStart();
     }
@@ -862,8 +888,9 @@ public abstract class Stage implements GameFluid {
     /**
      * This method is executed every
      * frame to call the {@code update}
-     * method of the backgrounds, objects
-     * and foregrounds of this {@code Stage}.
+     * method of the backgrounds, objects,
+     * foregrounds and camera of this
+     * {@code Stage}.
      * <p>
      * This method also calls this
      * {@code Stage}'s {@code onUpdate}
@@ -875,6 +902,7 @@ public abstract class Stage implements GameFluid {
         updateBackgrounds();
         updateObjects();
         updateForegrounds();
+        updateCamera();
 
         onUpdate();
     }
@@ -889,9 +917,9 @@ public abstract class Stage implements GameFluid {
     /**
      * This method is executed every frame
      * to call the {@code draw} method of
-     * the backgrounds, objects and foregrounds
-     * of this {@code Stage}, passing the
-     * {@code g2} argument.
+     * the backgrounds, objects, foregrounds
+     * and camera of this {@code Stage},
+     * passing the {@code g2} argument.
      * <p>
      * This method also calls this 
      * {@code Stage}'s {@code onDraw} method.
@@ -906,6 +934,7 @@ public abstract class Stage implements GameFluid {
         drawBackgrounds(g2);
         drawObjects(g2);
         drawForegrounds(g2);
+        drawCamera(g2);
         
         onDraw(g2);
     }
