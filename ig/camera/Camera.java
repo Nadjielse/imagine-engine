@@ -51,6 +51,32 @@ public class Camera extends StageElement implements GameFluid {
         return this.type;
     }
 
+    public void move() {
+        if (
+            getLeft() + getXSpeed() < 0
+        ) {
+            setX(0);
+        } else if (
+            getRight() + getXSpeed() > getStageWidth()
+        ) {
+            setX(getStageWidth() - getWidth());
+        } else {
+            increaseX(getXSpeed());
+        }
+
+        if (
+            getTop() + getYSpeed() < 0
+        ) {
+            setY(0);
+        } else if (
+            getBottom() + getYSpeed() > getStageHeight()
+        ) {
+            setY(getStageHeight() - getHeight());
+        } else {
+            increaseY(getYSpeed());
+        }
+    }
+
     @Override
     public void start() {
         

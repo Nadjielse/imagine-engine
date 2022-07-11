@@ -4,8 +4,6 @@ import java.awt.Graphics2D;
 
 import ig.camera.Camera;
 
-// TODO make autoscroll stop at stage boundaries
-
 public class AutoScroll implements CameraType {
 
     private Camera camera;
@@ -24,8 +22,7 @@ public class AutoScroll implements CameraType {
 
     @Override
     public void update() {
-        camera.increaseX(camera.getXSpeed());
-        camera.increaseY(camera.getYSpeed());
+        camera.move();
     }
 
     @Override

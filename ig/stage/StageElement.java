@@ -68,6 +68,34 @@ public abstract class StageElement {
     }
 
     /**
+     * Returns the width of the {@code Stage}
+     * of this {@code StageElement}.
+     * 
+     * @return the width of the {@code Stage}
+     */
+    public int getStageWidth() {
+        if(stage != null) {
+            return stage.getWidth();
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns the height of the {@code Stage}
+     * of this {@code StageElement}.
+     * 
+     * @return the height of the {@code Stage}
+     */
+    public int getStageHeight() {
+        if(stage != null) {
+            return stage.getHeight();
+        } else {
+            return 0;
+        }
+    }
+
+    /**
      * Returns the game associated
      * with this {@code StageElement}.
      * 
