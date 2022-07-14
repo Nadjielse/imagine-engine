@@ -6,10 +6,12 @@ import ig.stage.StageElement;
 import ig.stage.Stage;
 import ig.flow.GameFluid;
 import ig.camera.type.*;
+import ig.object.GameObject;
 
 public class Camera extends StageElement implements GameFluid {
 
     private CameraType type;
+    private boolean drawGrid = false;
 
     public Camera(Stage stage) {
         storeStage(stage);
@@ -47,8 +49,20 @@ public class Camera extends StageElement implements GameFluid {
         setType(new AutoScroll(this));
     }
 
+    public void setTypeFollow(GameObject target) {
+        setType(new Follow(this, target));
+    }
+
     public CameraType getType() {
         return this.type;
+    }
+
+    public void setDrawGrid(boolean drawGrid) {
+        this.drawGrid = drawGrid;
+    }
+
+    public boolean getDrawGrid() {
+        return this.drawGrid;
     }
 
     public void move() {
