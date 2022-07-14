@@ -53,6 +53,10 @@ public class Camera extends StageElement implements GameFluid {
         setType(new Follow(this, target));
     }
 
+    public void setTypeFollow(GameObject target, int smoothness) {
+        setType(new Follow(this, target, smoothness));
+    }
+
     public CameraType getType() {
         return this.type;
     }

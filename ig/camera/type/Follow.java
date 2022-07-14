@@ -12,11 +12,17 @@ public class Follow implements CameraType {
     private Camera camera;
     private GameObject target;
     private CameraGrid grid;
+    private int smoothness = 0;
 
     public Follow(Camera camera, GameObject target) {
         storeCamera(camera);
         storeTarget(target);
         createGrid();
+    }
+
+    public Follow(Camera camera, GameObject target, int smoothness) {
+        this(camera, target);
+        storeSmoothness(smoothness);
     }
 
     private void storeCamera(Camera camera) {
@@ -42,6 +48,14 @@ public class Follow implements CameraType {
             target.getWidth(),
             target.getHeight()
         );
+    }
+
+    private void storeSmoothness(int smoothness) {
+        if(smoothness < 0) {
+            throw new IllegalArgumentException("cannot store negative smoothness");
+        }
+        
+        this.smoothness = smoothness;
     }
 
     @Override
