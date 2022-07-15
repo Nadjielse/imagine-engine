@@ -53,12 +53,12 @@ public class Camera extends StageElement implements GameFluid {
         setType(new Follow(this, target));
     }
 
-    public void setTypeFollow(GameObject target, int smoothness) {
-        setType(new Follow(this, target, smoothness));
-    }
-
     public CameraType getType() {
         return this.type;
+    }
+
+    public void setGrid(CameraGrid grid) {
+        type.setGrid(grid);
     }
 
     public void setDrawGrid(boolean drawGrid) {
@@ -69,6 +69,7 @@ public class Camera extends StageElement implements GameFluid {
         return this.drawGrid;
     }
 
+    @Override
     public void move() {
         if (
             getLeft() + getXSpeed() < 0

@@ -213,4 +213,14 @@ public abstract class StageElement extends GameElement {
         return this.ySpeed;
     }
 
+    /**
+     * Generic code for moving this
+     * {@code StageElement} according
+     * to its speed.
+     */
+    public void move() {
+        increaseX(xSpeed);
+        increaseY(ySpeed);
+    }
+
 }

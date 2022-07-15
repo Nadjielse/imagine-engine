@@ -228,6 +228,7 @@ public abstract class GameObject extends AnimatableStageElement implements GameF
      */
     @Override
     public void update() {
+        move();
         
         onUpdate();
     }

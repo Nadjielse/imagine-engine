@@ -228,8 +228,7 @@ public abstract class Scenario extends AnimatableStageElement implements GameFlu
      */
     @Override
     public void update() {
-        increaseX(getXSpeed());
-        increaseY(getYSpeed());
+        move();
 
         onUpdate();
     }
