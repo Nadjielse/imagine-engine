@@ -29,7 +29,7 @@ public class Follow implements CameraType {
 
     private void storeTarget(GameObject target) {
         if(target == null) {
-            throw new IllegalArgumentException("cannot store null target");
+            camera.setTypeStatic();
         }
         
         this.target = target;
