@@ -36,13 +36,22 @@ public class Follow implements CameraType {
     }
 
     private void createGrid() {
+        int gridWidth =
+            target.getWidth() > camera.getWidth() ?
+            camera.getWidth() :
+            target.getWidth();
+        int gridHeight =
+            target.getHeight() > camera.getHeight() ?
+            camera.getHeight() :
+            target.getHeight();
+            
         setGrid (
             new CameraGrid (
                 camera,
-                camera.getWidth() / 2 - target.getWidth() / 2,
-                camera.getHeight() / 2 - target.getHeight() / 2,
-                target.getWidth(),
-                target.getHeight()
+                camera.getWidth() / 2 - gridWidth / 2,
+                camera.getHeight() / 2 - gridHeight / 2,
+                gridWidth,
+                gridHeight
             )
         );
     }

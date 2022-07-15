@@ -7,7 +7,8 @@ import ig.flow.GameFluid;
 import ig.game.Game;
 import ig.scenario.Scenario;
 import ig.object.GameObject;
-import ig.camera.Camera;
+import ig.camera.*;
+import ig.camera.type.CameraType;
 
 /**
  * Class for creating a stage for a {@code Game}.
@@ -725,6 +726,122 @@ public abstract class Stage implements GameFluid {
      */
     public Camera getCamera() {
         return this.camera;
+    }
+
+    /**
+     * Sets the coordinates of the
+     * {@code Camera} of this {@code Stage}.
+     * 
+     * @param x the x coordinate
+     * @param y the y coordinate
+     */
+    public void setCameraCoordinates(int x, int y) {
+        camera.setCoordinates(x, y);
+    }
+
+    /**
+     * Sets the speed on the x axis of
+     * the {@code Camera} of this {@code Stage}.
+     * 
+     * @param xSpeed the speed to be set
+     */
+    public void setCameraXSpeed(int xSpeed) {
+        camera.setXSpeed(xSpeed);
+    }
+
+    /**
+     * Sets the speed on the y axis of
+     * the {@code Camera} of this {@code Stage}.
+     * 
+     * @param ySpeed the speed to be set
+     */
+    public void setCameraYSpeed(int ySpeed) {
+        camera.setYSpeed(ySpeed);
+    }
+
+    /**
+     * Sets the type of the {@code Camera} of
+     * this {@code Stage} to the passed
+     * {@code CameraType}.
+     * 
+     * @param type the type to be set
+     */
+    public void setCameraType(CameraType type) {
+        camera.setType(type);
+    }
+
+    /**
+     * Sets the type of the {@code Camera} of
+     * this {@code Stage} to the {@code Static}
+     * {@code CameraType}.
+     */
+    public void setCameraTypeStatic() {
+        camera.setTypeStatic();
+    }
+
+    /**
+     * Sets the type of the {@code Camera} of
+     * this {@code Stage} to the {@code AutoScroll}
+     * {@code CameraType}.
+     */
+    public void setCameraTypeAutoScroll() {
+        camera.setTypeAutoScroll();
+    }
+
+    /**
+     * Sets the type of the {@code Camera} of
+     * this {@code Stage} to the {@code Follow}
+     * {@code CameraType}.
+     * 
+     * @param target the {@code GameObject} that
+     * the camera should follow
+     */
+    public void setCameraTypeFollow(GameObject target) {
+        camera.setTypeFollow(target);
+    }
+
+    /**
+     * Returns the {@code CameraType} of
+     * the {@code Camera} of this {@code Stage}.
+     * 
+     * @return the {@code CameraType}
+     */
+    public CameraType getCameraType() {
+        return camera.getType();
+    }
+
+    /**
+     * Sets the {@code CameraGrid} of the
+     * {@code Camera} of this {@code Stage}.
+     * 
+     * @param grid the camera grid
+     */
+    public void setCameraGrid(CameraGrid grid) {
+        camera.setGrid(grid);
+    }
+
+    /**
+     * Defines if the {@code CameraGrid} should
+     * be drawn or not.
+     * 
+     * @param drawGrid boolean specifying if
+     * the {@code CameraGrid} should be drawn
+     */
+    public void setDrawCameraGrid(boolean drawGrid) {
+        camera.setDrawGrid(drawGrid);
+    }
+
+    /**
+     * Returns {@code true} if the
+     * {@code CameraGrid} is configured
+     * to be drawn and {@code false}
+     * otherwise.
+     * 
+     * @return boolean specifying if the
+     * {@code CameraGrid} is being drawn
+     */
+    public boolean getDrawCameraGrid() {
+        return camera.getDrawGrid();
     }
 
     /**
