@@ -10,6 +10,8 @@ import ig.object.GameObject;
 
 /**
  * Class that represents the view of a {@code Stage}.
+ * 
+ * @author Daniel O Sousa
  */
 public class Camera extends StageElement implements GameFluid {
 

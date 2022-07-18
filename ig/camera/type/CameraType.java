@@ -7,6 +7,8 @@ import ig.camera.CameraGrid;
 /**
  * Interface extended by all
  * {@code CameraType}s.
+ * 
+ * @author Daniel O Sousa
  */
 public interface CameraType {
 
