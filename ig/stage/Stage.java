@@ -7,8 +7,8 @@ import ig.flow.GameFluid;
 import ig.game.Game;
 import ig.scenario.Scenario;
 import ig.object.GameObject;
-
-// TODO camera
+import ig.camera.*;
+import ig.camera.type.CameraType;
 
 /**
  * Class for creating a stage for a {@code Game}.
@@ -52,16 +52,35 @@ public abstract class Stage implements GameFluid {
      */
     private ArrayList<Scenario> foregrounds = new ArrayList<Scenario>();
 
-    
+    /**
+     * The camera of this {@code Stage}.
+     */
+    private Camera camera;
 
     /**
-     * Sets a reference to the {@code Game}
+     * Creates a new {@code Stage} that will
+     * belong to the passed {@code game}.
+     * 
+     * @param game the {@code Game} to which
+     * this {@code Stage} belongs
+     */
+    public Stage(Game game) {
+        storeGame(game);
+        createCamera();
+    }
+
+    /**
+     * Stores the {@code Game}
      * that has this {@code Stage}.
      * 
      * @param game the game to which this
      * {@code Stage} belongs
      */
-    public void setGame(Game game) {
+    private void storeGame(Game game) {
+        if(game == null) {
+            throw new IllegalArgumentException("cannot store null game");
+        }
+
         this.game = game;
     }
 
@@ -74,6 +93,34 @@ public abstract class Stage implements GameFluid {
      */
     public Game getGame() {
         return this.game;
+    }
+
+    /**
+     * Returns the width of the {@code GamePanel}
+     * where this {@code Stage} is exhibited.
+     * 
+     * @return the width of the {@code GamePanel}
+     */
+    public int getGamePanelWidth() {
+        if(game != null) {
+            return game.getGamePanelWidth();
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns the height of the {@code GamePanel}
+     * where this {@code Stage} is exhibited.
+     * 
+     * @return the height of the {@code GamePanel}
+     */
+    public int getGamePanelHeight() {
+        if(game != null) {
+            return game.getGamePanelHeight();
+        } else {
+            return 0;
+        }
     }
 
     /**
@@ -663,6 +710,141 @@ public abstract class Stage implements GameFluid {
     }
 
     /**
+     * Creates a {@code Camera} for
+     * this {@code Stage}.
+     */
+    private void createCamera() {
+        this.camera = new Camera(this);
+    }
+
+    /**
+     * Returns the {@code Camera} of
+     * this {@code Stage}.
+     * 
+     * @return the {@code Camera} of
+     * this {@code Stage}
+     */
+    public Camera getCamera() {
+        return this.camera;
+    }
+
+    /**
+     * Sets the coordinates of the
+     * {@code Camera} of this {@code Stage}.
+     * 
+     * @param x the x coordinate
+     * @param y the y coordinate
+     */
+    public void setCameraCoordinates(int x, int y) {
+        camera.setCoordinates(x, y);
+    }
+
+    /**
+     * Sets the speed on the x axis of
+     * the {@code Camera} of this {@code Stage}.
+     * 
+     * @param xSpeed the speed to be set
+     */
+    public void setCameraXSpeed(int xSpeed) {
+        camera.setXSpeed(xSpeed);
+    }
+
+    /**
+     * Sets the speed on the y axis of
+     * the {@code Camera} of this {@code Stage}.
+     * 
+     * @param ySpeed the speed to be set
+     */
+    public void setCameraYSpeed(int ySpeed) {
+        camera.setYSpeed(ySpeed);
+    }
+
+    /**
+     * Sets the type of the {@code Camera} of
+     * this {@code Stage} to the passed
+     * {@code CameraType}.
+     * 
+     * @param type the type to be set
+     */
+    public void setCameraType(CameraType type) {
+        camera.setType(type);
+    }
+
+    /**
+     * Sets the type of the {@code Camera} of
+     * this {@code Stage} to the {@code Static}
+     * {@code CameraType}.
+     */
+    public void setCameraTypeStatic() {
+        camera.setTypeStatic();
+    }
+
+    /**
+     * Sets the type of the {@code Camera} of
+     * this {@code Stage} to the {@code AutoScroll}
+     * {@code CameraType}.
+     */
+    public void setCameraTypeAutoScroll() {
+        camera.setTypeAutoScroll();
+    }
+
+    /**
+     * Sets the type of the {@code Camera} of
+     * this {@code Stage} to the {@code Follow}
+     * {@code CameraType}.
+     * 
+     * @param target the {@code GameObject} that
+     * the camera should follow
+     */
+    public void setCameraTypeFollow(GameObject target) {
+        camera.setTypeFollow(target);
+    }
+
+    /**
+     * Returns the {@code CameraType} of
+     * the {@code Camera} of this {@code Stage}.
+     * 
+     * @return the {@code CameraType}
+     */
+    public CameraType getCameraType() {
+        return camera.getType();
+    }
+
+    /**
+     * Sets the {@code CameraGrid} of the
+     * {@code Camera} of this {@code Stage}.
+     * 
+     * @param grid the camera grid
+     */
+    public void setCameraGrid(CameraGrid grid) {
+        camera.setGrid(grid);
+    }
+
+    /**
+     * Defines if the {@code CameraGrid} should
+     * be drawn or not.
+     * 
+     * @param drawGrid boolean specifying if
+     * the {@code CameraGrid} should be drawn
+     */
+    public void setDrawCameraGrid(boolean drawGrid) {
+        camera.setDrawGrid(drawGrid);
+    }
+
+    /**
+     * Returns {@code true} if the
+     * {@code CameraGrid} is configured
+     * to be drawn and {@code false}
+     * otherwise.
+     * 
+     * @return boolean specifying if the
+     * {@code CameraGrid} is being drawn
+     */
+    public boolean getDrawCameraGrid() {
+        return camera.getDrawGrid();
+    }
+
+    /**
      * Starts every background of this
      * {@code Stage} from the furthest to
      * the closest to the camera.
@@ -768,9 +950,36 @@ public abstract class Stage implements GameFluid {
     }
 
     /**
+     * Starts the camera of this
+     * {@code Stage}.
+     */
+    private void startCamera() {
+        camera.start();
+    }
+
+    /**
+     * Updates the camera of this
+     * {@code Stage}.
+     */
+    private void updateCamera() {
+        camera.update();
+    }
+
+    /**
+     * Draws the camera of this
+     * {@code Stage}.
+     * 
+     * @param g2 a {@code Graphics2D} instance
+     * with which the camera can be drawn
+     */
+    private void drawCamera(Graphics2D g2) {
+        camera.draw(g2);;
+    }
+
+    /**
      * Executes the {@code start} method of
-     * the backgrounds, objects and foregrounds
-     * of this {@code Stage}.
+     * the backgrounds, objects, foregrounds
+     * and camera of this {@code Stage}.
      * <p>
      * Also Executes this {@code Stage}'s
      * {@code onStart} method.
@@ -781,6 +990,7 @@ public abstract class Stage implements GameFluid {
         startBackgrounds();
         startObjects();
         startForegrounds();
+        startCamera();
 
         onStart();
     }
@@ -795,8 +1005,9 @@ public abstract class Stage implements GameFluid {
     /**
      * This method is executed every
      * frame to call the {@code update}
-     * method of the backgrounds, objects
-     * and foregrounds of this {@code Stage}.
+     * method of the backgrounds, objects,
+     * foregrounds and camera of this
+     * {@code Stage}.
      * <p>
      * This method also calls this
      * {@code Stage}'s {@code onUpdate}
@@ -808,6 +1019,7 @@ public abstract class Stage implements GameFluid {
         updateBackgrounds();
         updateObjects();
         updateForegrounds();
+        updateCamera();
 
         onUpdate();
     }
@@ -822,9 +1034,9 @@ public abstract class Stage implements GameFluid {
     /**
      * This method is executed every frame
      * to call the {@code draw} method of
-     * the backgrounds, objects and foregrounds
-     * of this {@code Stage}, passing the
-     * {@code g2} argument.
+     * the backgrounds, objects, foregrounds
+     * and camera of this {@code Stage},
+     * passing the {@code g2} argument.
      * <p>
      * This method also calls this 
      * {@code Stage}'s {@code onDraw} method.
@@ -839,6 +1051,7 @@ public abstract class Stage implements GameFluid {
         drawBackgrounds(g2);
         drawObjects(g2);
         drawForegrounds(g2);
+        drawCamera(g2);
         
         onDraw(g2);
     }

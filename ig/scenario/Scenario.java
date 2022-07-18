@@ -179,6 +179,28 @@ public abstract class Scenario extends AnimatableStageElement implements GameFlu
     }
 
     /**
+     * Returns the apparent x coordinate of
+     * this {@code Scenario} when taking into
+     * account the camera position.
+     * 
+     * @return the apparent x coordinate
+     */
+    public int getApparentX() {
+        return getX() - getCameraX() * xParallaxSpeed / 100;
+    }
+
+    /**
+     * Returns the apparent y coordinate of
+     * this {@code Scenario} when taking into
+     * account the camera position.
+     * 
+     * @return the apparent y coordinate
+     */
+    public int getApparentY() {
+        return getY() - getCameraY() * yParallaxSpeed / 100;
+    }
+
+    /**
      * Calls the {@code onStart()} method.
      * 
      * @see #onStart()
@@ -206,8 +228,7 @@ public abstract class Scenario extends AnimatableStageElement implements GameFlu
      */
     @Override
     public void update() {
-        increaseX(getXSpeed());
-        increaseY(getYSpeed());
+        move();
 
         onUpdate();
     }

@@ -365,9 +365,6 @@ public abstract class Game implements GameFluid {
      */
     public void setStages(ArrayList<Stage> stages) {
         if(stages != null) {
-            for(Stage stage : stages) {
-                stage.setGame(this);
-            }
             this.stages = stages;
         }
     }

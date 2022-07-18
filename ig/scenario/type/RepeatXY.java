@@ -81,14 +81,14 @@ public class RepeatXY implements ScenarioType {
         }
 
         int drawingY =
-            scenario.getY() <= 0 ?
-            scenario.getY() % scenario.getHeight() :
-            scenario.getY() % scenario.getHeight() - scenario.getHeight();
+            scenario.getApparentY() <= 0 ?
+            scenario.getApparentY() % scenario.getHeight() :
+            scenario.getApparentY() % scenario.getHeight() - scenario.getHeight();
         while(drawingY < scenario.getGamePanelHeight()) {
             int drawingX =
-                scenario.getX() <= 0 ?
-                scenario.getX() % scenario.getWidth() :
-                scenario.getX() % scenario.getWidth() - scenario.getWidth();
+                scenario.getApparentX() <= 0 ?
+                scenario.getApparentX() % scenario.getWidth() :
+                scenario.getApparentX() % scenario.getWidth() - scenario.getWidth();
             while(drawingX < scenario.getGamePanelWidth()) {
                 g2.drawImage (
                     scenario.getCurrentFrame().getImage(),

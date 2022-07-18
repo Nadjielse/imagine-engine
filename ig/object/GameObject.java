@@ -134,6 +134,72 @@ public abstract class GameObject extends AnimatableStageElement implements GameF
     }
 
     /**
+     * Returns the apparent x coordinate of
+     * this {@code GameObject} when taking into
+     * account the camera position.
+     * 
+     * @return the apparent x coordinate
+     */
+    public int getApparentX() {
+        return getX() - getCameraX();
+    }
+
+    /**
+     * Returns the apparent y coordinate of
+     * this {@code GameObject} when taking into
+     * account the camera position.
+     * 
+     * @return the apparent y coordinate
+     */
+    public int getApparentY() {
+        return getY() - getCameraY();
+    }
+
+    /**
+     * Returns the apparent y coordinate of
+     * the top boundary of this {@code GameObject}
+     * when taking into account the camera position.
+     * 
+     * @return the apparent top coordinate
+     */
+    public int getApparentTop() {
+        return getTop() - getCameraY();
+    }
+
+    /**
+     * Returns the apparent x coordinate of
+     * the right boundary of this {@code GameObject}
+     * when taking into account the camera position.
+     * 
+     * @return the apparent right coordinate
+     */
+    public int getApparentRight() {
+        return getRight() - getCameraX();
+    }
+
+    /**
+     * Returns the apparent y coordinate of
+     * the bottom boundary of this {@code GameObject}
+     * when taking into account the camera position.
+     * 
+     * @return the apparent bottom coordinate
+     */
+    public int getApparentBottom() {
+        return getBottom() - getCameraY();
+    }
+
+    /**
+     * Returns the apparent x coordinate of
+     * the left boundary of this {@code GameObject}
+     * when taking into account the camera position.
+     * 
+     * @return the apparent left coordinate
+     */
+    public int getApparentLeft() {
+        return getLeft() - getCameraX();
+    }
+
+    /**
      * Executes the {@code onStart} method.
      * 
      * @see #onStart()
@@ -162,6 +228,7 @@ public abstract class GameObject extends AnimatableStageElement implements GameF
      */
     @Override
     public void update() {
+        move();
         
         onUpdate();
     }
@@ -200,14 +267,14 @@ public abstract class GameObject extends AnimatableStageElement implements GameF
         if(showBoundingBox) {
             g2.setColor(color);
             g2.fillRect (
-                getX(), getY(),
+                getApparentX(), getApparentY(),
                 getWidth(), getHeight()
             );
         }
         if(showSprite && getSpriteSheet() != null) {
             g2.drawImage (
                 getCurrentFrame().getImage(),
-                getX(), getY(),
+                getApparentX(), getApparentY(),
                 getWidth(), getHeight(),
                 null
             );

@@ -1,6 +1,7 @@
 package ig.stage;
 
 import ig.sprite.*;
+import ig.camera.Camera;
 
 /**
  * Super class for animatable stage elements
@@ -15,6 +16,8 @@ public abstract class AnimatableStageElement extends StageElement {
      * manage the sprite sheet.
      */
     private FrameManager frameManager;
+
+
 
     /**
      * Creates a new {@code FrameManager} to
@@ -175,6 +178,61 @@ public abstract class AnimatableStageElement extends StageElement {
             return frameManager.getCurrentFrame();
         } else {
             return null;
+        }
+    }
+
+    /**
+     * Returns the {@code Camera} of the
+     * {@code Stage} that contains this
+     * {@code AnimatableStageElement}.
+     * 
+     * @return the {@code Camera} of the
+     * {@code Stage} of this
+     * {@code AnimatableStageElement}
+     */
+    public Camera getCamera() {
+        if(getStage() != null) {
+            return getStage().getCamera();
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Returns the x coordinate of the
+     * {@code Camera} of the {@code Stage}
+     * that contains this
+     * {@code AnimatableStageElement}.
+     * 
+     * @return the x coordinate of the
+     * {@code Camera} of the
+     * {@code Stage} of this
+     * {@code AnimatableStageElement}
+     */
+    public int getCameraX() {
+        if(getCamera() != null) {
+            return getCamera().getX();
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Returns the y coordinate of the
+     * {@code Camera} of the {@code Stage}
+     * that contains this
+     * {@code AnimatableStageElement}.
+     * 
+     * @return the y coordinate of the
+     * {@code Camera} of the
+     * {@code Stage} of this
+     * {@code AnimatableStageElement}
+     */
+    public int getCameraY() {
+        if(getCamera() != null) {
+            return getCamera().getY();
+        } else {
+            return 0;
         }
     }
 
