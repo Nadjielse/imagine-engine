@@ -48,7 +48,7 @@ public abstract class Game implements GameFluid {
     /**
      * Stores the stages of this {@code Game}.
      */
-    private ArrayList<Stage> stages;
+    private ArrayList<Stage> stages = new ArrayList<Stage>();
 
     /**
      * Stores the current stage of this {@code Game}.
@@ -69,6 +69,7 @@ public abstract class Game implements GameFluid {
     public Game() {
         createGameFrame();
         setSize(1024, 576);
+        centralize();
         createKeyHandler();
     }
 
@@ -155,6 +156,13 @@ public abstract class Game implements GameFluid {
     }
 
     /**
+     * Centralizes the game on the screen.
+     */
+    public void centralize() {
+        gameFrame.setLocationRelativeTo(null);
+    }
+
+    /**
      * Creates a {@code KeyHandler} instance
      * to monitor the inputs from the keyboard.
      */
@@ -209,11 +217,26 @@ public abstract class Game implements GameFluid {
     /**
      * Returns the fps with which this
      * {@code Game} is configured to run.
+     * {@code 0} is returned if no fps was
+     * configured.
      * 
      * @return the fps of this {@code Game}
      */
     public int getFps() {
-        return getGameFlow().getFps();
+        if(gameFlow != null) {
+            return gameFlow.getFps();
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * Makes the flow of this {@code Game} finish.
+     */
+    public void killGameFlow() {
+        if(gameFlow != null) {
+            gameFlow.killFlow();
+        }
     }
 
     /**
@@ -224,19 +247,26 @@ public abstract class Game implements GameFluid {
      * configure the fps display
      */
     public void setDisplayFps(boolean displayFps) {
-        getGameFlow().setDisplayFps(displayFps);
+        if(gameFlow != null) {
+            gameFlow.setDisplayFps(displayFps);
+        }
     }
 
     /**
      * Returns {@code true} if the fps is configured
      * to be displayed on the console and {@code false}
-     * otherwise.
+     * otherwise. {@code false} is also returned
+     * if there is no {@code GameFlow} executing.
      * 
      * @return boolean indicating fps display
      * state
      */
     public boolean getDisplayFps() {
-        return getGameFlow().getDisplayFps();
+        if(gameFlow != null) {
+            return gameFlow.getDisplayFps();
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -250,7 +280,10 @@ public abstract class Game implements GameFluid {
      */
     private void setTileWidth(int tileWidth) {
         if(tileWidth < 0) {
-            throw new IllegalArgumentException("can't set tile width to " + tileWidth + ": " + tileWidth + " < 0");
+            throw new IllegalArgumentException (
+                "can't set tile width to " + tileWidth + ": " +
+                tileWidth + " < 0"
+            );
         }
 
         this.tileWidth = tileWidth;
@@ -267,7 +300,10 @@ public abstract class Game implements GameFluid {
      */
     private void setTileHeight(int tileHeight) {
         if(tileHeight < 0) {
-            throw new IllegalArgumentException("can't set tile height to " + tileHeight + ": " + tileHeight + " < 0");
+            throw new IllegalArgumentException (
+                "can't set tile height to " + tileHeight + ": "
+                + tileHeight + " < 0"
+            );
         }
 
         this.tileHeight = tileHeight;
@@ -302,14 +338,17 @@ public abstract class Game implements GameFluid {
      */
     public void setHorizontalTileAmount(int amount) {
         if(amount < 0) {
-            throw new IllegalArgumentException("can't have " + amount + " tiles horizontally onscreen: " + amount + " < 0");
-        }
-        if(amount == 0) {
-            setTileWidth(0);
-            return;
+            throw new IllegalArgumentException (
+                "can't have " + amount + " tiles horizontally onscreen: " +
+                amount + " < 0"
+            );
         }
 
-        setTileWidth(getGamePanelWidth() / amount);
+        setTileWidth (
+            amount == 0 ?
+            0 :
+            getGamePanelWidth() / amount
+        );
     }
 
     /**
@@ -325,14 +364,17 @@ public abstract class Game implements GameFluid {
      */
     public void setVerticalTileAmount(int amount) {
         if(amount < 0) {
-            throw new IllegalArgumentException("can't have " + amount + " tiles vertically onscreen: " + amount + " < 0");
-        }
-        if(amount == 0) {
-            setTileHeight(0);
-            return;
+            throw new IllegalArgumentException (
+                "can't have " + amount + " tiles vertically onscreen: " +
+                amount + " < 0"
+            );
         }
 
-        setTileHeight(getGamePanelHeight() / amount);
+        setTileHeight (
+            amount == 0 ?
+            0 :
+            getGamePanelHeight() / amount
+        );
     }
 
     /**
@@ -370,6 +412,210 @@ public abstract class Game implements GameFluid {
     }
 
     /**
+     * Adds the passed {@code stage} to
+     * the end of the list of stages if
+     * the argument is not {@code null}.
+     * 
+     * @param stage {@code Stage} to
+     * be added
+     * 
+     * @throws IllegalArgumentException if
+     * the {@code stage} argument is
+     * {@code null}
+     */
+    public void addStage(Stage stage) {
+        addLastStage(stage);
+    }
+
+    /**
+     * Adds the passed {@code stage} to
+     * the beginning of the list of stages if
+     * the argument is not {@code null}.
+     * 
+     * @param stage {@code Stage} to
+     * be added
+     * 
+     * @throws IllegalArgumentException if
+     * the {@code stage} argument is
+     * {@code null}
+     */
+    public void addFirstStage(Stage stage) {
+        if(stage == null) {
+            throw new IllegalArgumentException (
+                "cannot add null stage"
+            );
+        }
+
+        stages.add(0, stage);
+    }
+
+    /**
+     * Adds the passed {@code stage} to the
+     * specified {@code position} of the list
+     * of stages.
+     * <p>
+     * If the {@code stage} is null an exception
+     * will be thrown. Also if the {@code position}
+     * is invalid ({@code position < 0 || position
+     * > stages.size()}) an exception will
+     * be thrown.
+     * 
+     * @param position the position where to add
+     * the {@code stage}
+     * @param stage {@code Stage} to be added
+     * 
+     * @throws IndexOutOfBoundsException if the
+     * {@code position} argument is invalid
+     * @throws IllegalArgumentException if the
+     * {@code stage} argument is {@code null}
+     */
+    public void addNthStage(int position, Stage stage) {
+        if(position < 0 || position > stages.size()) {
+            throw new IndexOutOfBoundsException (
+                "cannot add stage at position " +
+                position
+            );
+        }
+        if(stage == null) {
+            throw new IllegalArgumentException (
+                "cannot add null stage"
+            );
+        }
+
+        stages.add(position, stage);
+    }
+
+    /**
+     * Adds the passed {@code stage} to
+     * the end of the list of stages if
+     * the argument is not {@code null}.
+     * 
+     * @param stage {@code Stage} to
+     * be added
+     * 
+     * @throws IllegalArgumentException if
+     * the {@code stage} argument is
+     * {@code null}
+     */
+    public void addLastStage(Stage stage) {
+        if(stage == null) {
+            throw new IllegalArgumentException (
+                "cannot add null stage"
+            );
+        }
+
+        stages.add(stage);
+    }
+
+    /**
+     * Removes all stages that are
+     * stored in this {@code Game}.
+     * After the removal the current
+     * stage will be unselected.
+     */
+    public void removeAllStages() {
+        stages.clear();
+        if(currentStage != null) {
+            unselectStage();
+        }
+    }
+
+    /**
+     * Removes the specified {@code stage}
+     * from the stages stored in this
+     * {@code Game} if it exists. If this
+     * removed stage is the current stage
+     * it is unselected.
+     * 
+     * @param stage the stage to be removed
+     */
+    public void removeStage(Stage stage) {
+        stages.remove(stage);
+        if(currentStage == stage) {
+            unselectStage();
+        }
+    }
+
+    /**
+     * Removes and returns the first stage
+     * from the stages stored in this
+     * {@code Game} if there are any. If this
+     * removed stage is the current stage
+     * it is unselected.
+     * 
+     * @return the removed {@code Stage}
+     */
+    public Stage removeFirstStage() {
+        if(stages.isEmpty()) {
+            return null;
+        }
+
+        Stage removedStage = stages.remove(0);
+        if(currentStage == removedStage) {
+            unselectStage();
+        }
+        return removedStage;
+    }
+
+    /**
+     * Removes and returns the stage at the
+     * specified {@code position} from the
+     * stages stored in this {@code Game} if
+     * there are any and the {@code position}
+     * is valid ({@code position > 0 && position
+     * < stages.size()}).
+     * <p>
+     * If the stage removed by this method is
+     * the current stage, it is unselected.
+     * 
+     * @param position the position where is
+     * the {@code Stage} to be removed
+     * 
+     * @return the removed {@code Stage}
+     * 
+     * @throws IndexOutOfBoundsException if the
+     * position is invalid
+     */
+    public Stage removeNthStage(int position) {
+        if(stages.isEmpty()) {
+            return null;
+        }
+        if(position < 0 || position >= stages.size()) {
+            throw new IndexOutOfBoundsException (
+                "position " + position +
+                " does not match a stage"
+            );
+        }
+
+        Stage removedStage = stages.remove(position);
+        if(currentStage == removedStage) {
+            unselectStage();
+        }
+        return removedStage;
+    }
+
+    /**
+     * Removes and returns the last stage
+     * from the stages stored in this
+     * {@code Game} if there are any. If
+     * this removed stage is the current
+     * stage it is unselected.
+     * 
+     * @return the removed {@code Stage}
+     */
+    public Stage removeLastStage() {
+        if(stages.isEmpty()) {
+            return null;
+        }
+
+        Stage removedStage = stages.remove(stages.size() - 1);
+        if(currentStage == removedStage) {
+            unselectStage();
+        }
+        return removedStage;
+    }
+
+    /**
      * Returns an {@code ArrayList} with
      * the stages of this {@code Game}.
      * 
@@ -388,7 +634,7 @@ public abstract class Game implements GameFluid {
      * If the passed argument does not correspond
      * to a stage (is negative or greater or equal 
      * to the amount of added stages), throws
-     * an {@code IndexOutOfBoundException}.
+     * an {@code IndexOutOfBoundsException}.
      * 
      * @param position a position specifiyng
      * the stage to select
@@ -397,52 +643,75 @@ public abstract class Game implements GameFluid {
      * doesn't correspond to a stage
      */
     public void selectStage(int position) {
-        if(getStages() == null || getStages().size() == 0) {
+        if(stages.isEmpty()) {
             return;
         }
-        if(position < 0 || position >= getStages().size()) {
-            throw new IndexOutOfBoundsException("position " + position + " does not correspond to a stage");
+        if(position < 0 || position >= stages.size()) {
+            throw new IndexOutOfBoundsException (
+                "position " + position +
+                " does not correspond to a stage"
+            );
         }
 
-        Stage currentStage = getStages().get(position);
+        Stage currentStage = stages.get(position);
         currentStage.start();
         this.currentStage = currentStage;
     }
 
     /**
+     * Unselects whatever stage
+     * is currently selected.
+     */
+    public void unselectStage() {
+        this.currentStage = null;
+    }
+
+    /**
      * Selects and starts the next stage from
-     * the stages of this {@code Game}.
+     * the stages of this {@code Game}. If the
+     * current stage is {@code null}, the first
+     * stage will be selected.
      * <p>
      * If there are no stages to select, this
      * method won't do anything.
      */
     public void nextStage() {
-        if(getStages() == null) {
+        if(stages.isEmpty()) {
+            return;
+        }
+        if(currentStage == stages.get(stages.size() - 1)) {
+            return;
+        }
+        if(currentStage == null) {
+            selectStage(0);
             return;
         }
         
-        int currentStageIndex = getStages().indexOf(currentStage);
-        if(currentStageIndex < getStages().size() - 1) {
-            selectStage(currentStageIndex + 1);
-        }
+        selectStage(stages.indexOf(currentStage) + 1);
     }
 
     /**
      * Selects and starts the previous stage from
-     * the stages of this {@code Game}.
+     * the stages of this {@code Game}. If the
+     * current stage is {@code null}, the last
+     * stage will be selected.
      * <p>
      * If there are no stages to select, this
      * method won't do anything.
      */
     public void previousStage() {
-        if(getStages() == null) {
+        if(stages.isEmpty()) {
+            return;
+        }
+        if(currentStage == stages.get(0)) {
+            return;
+        }
+        if(currentStage == null) {
+            selectStage(stages.size() - 1);
             return;
         }
         
-        int currentStageIndex = getStages().indexOf(currentStage);
-        if(currentStageIndex > 0) {
-            selectStage(currentStageIndex - 1);
-        }
+        selectStage(stages.indexOf(currentStage) - 1);
     }
 
     /**
@@ -476,15 +745,6 @@ public abstract class Game implements GameFluid {
      */
     public boolean getDrawTileGrid() {
         return this.drawTileGrid;
-    }
-
-    /**
-     * Makes the flow of this {@code Game} finish.
-     */
-    public void killGameFlow() {
-        if(getGameFlow() != null) {
-            getGameFlow().killFlow();
-        }
     }
 
     /**
@@ -531,8 +791,8 @@ public abstract class Game implements GameFluid {
      */
     @Override
     public void update() {
-        if(getCurrentStage() != null) {
-            getCurrentStage().update();
+        if(currentStage != null) {
+            currentStage.update();
         }
 
         onUpdate();
@@ -561,8 +821,8 @@ public abstract class Game implements GameFluid {
      */
     @Override
     public void draw(Graphics2D g2) {
-        if(getCurrentStage() != null) {
-            getCurrentStage().draw(g2);
+        if(currentStage != null) {
+            currentStage.draw(g2);
         }
 
         onDraw(g2);
