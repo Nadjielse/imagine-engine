@@ -144,7 +144,10 @@ public abstract class GameElement {
      */
     public void setWidth(int width) {
         if(width < 0) {
-            throw new IllegalArgumentException("cannot set width to " + width + " (negative width)");
+            throw new IllegalArgumentException (
+                "cannot set width to " + width +
+                " (negative width)"
+            );
         }
         
         this.width = width;
@@ -171,7 +174,10 @@ public abstract class GameElement {
      */
     public void setHeight(int height) {
         if(height < 0) {
-            throw new IllegalArgumentException("cannot set height to " + height + " (negative height)");
+            throw new IllegalArgumentException (
+                "cannot set height to " + height +
+                " (negative height)"
+            );
         }
         
         this.height = height;

@@ -163,6 +163,15 @@ public abstract class Game implements GameFluid {
     }
 
     /**
+     * Causes a call to the
+     * {@code repaint} method of
+     * the {@code GamePanel}.
+     */
+    public void repaintGamePanel() {
+        getGamePanel().repaint();
+    }
+
+    /**
      * Creates a {@code KeyHandler} instance
      * to monitor the inputs from the keyboard.
      */
