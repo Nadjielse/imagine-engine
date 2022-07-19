@@ -37,8 +37,6 @@ public class GameFrame extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setTitle("Imagine Engine");
         setLayout(null);
-        // TODO set icon
-        setLocationRelativeTo(null);
         setVisible(true);
         setResizable(false);
     }
