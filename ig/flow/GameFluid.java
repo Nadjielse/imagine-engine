@@ -29,8 +29,8 @@ public interface GameFluid {
      * class that implements
      * this interface.
      * 
-     * @param g2 a {@code Graphics2D} instance
-     *           to draw with
+     * @param g2 a {@code Graphics2D}
+     * instance to draw with
      */
     void draw(Graphics2D g2);
 

@@ -23,8 +23,6 @@ public class KeyHandler implements KeyListener {
      */
     private ArrayList<Integer> activeKeys = new ArrayList<Integer>();
 
-    
-
     /**
      * Returns an array list storing the codes
      * of the currently pressed keys.
