@@ -30,12 +30,6 @@ public class SpriteSheet extends Sprite {
     private int gap = 0;
 
     /**
-     * Matrix that stores the sprites from this
-     * sprite sheet separately.
-     */
-    private Sprite[][] sprites;
-
-    /**
      * Stores the width of the sprites from
      * this sprite sheet.
      */
@@ -48,6 +42,12 @@ public class SpriteSheet extends Sprite {
     private int spriteHeight;
 
     /**
+     * Matrix that stores the sprites from this
+     * sprite sheet separately.
+     */
+    private Sprite[][] sprites;
+
+    /**
      * Creates a {@code SpriteSheet} instance which
      * will store the image found in the passed {@code path}.
      * <p>
@@ -58,7 +58,7 @@ public class SpriteSheet extends Sprite {
      */
     public SpriteSheet(String path) {
         super(path);
-        setSpriteDimensions();
+        storeSpriteDimensions();
         loadSprites();
     }
 
@@ -77,9 +77,9 @@ public class SpriteSheet extends Sprite {
      */
     public SpriteSheet(String path, int rows, int columns) {
         super(path);
-        setRows(rows);
-        setColumns(columns);
-        setSpriteDimensions();
+        storeRows(rows);
+        storeColumns(columns);
+        storeSpriteDimensions();
         loadSprites();
     }
 
@@ -103,10 +103,10 @@ public class SpriteSheet extends Sprite {
      */
     public SpriteSheet(String path, int rows, int columns, int gap) {
         super(path);
-        setRows(rows);
-        setColumns(columns);
-        setGap(gap);
-        setSpriteDimensions();
+        storeRows(rows);
+        storeColumns(columns);
+        storeGap(gap);
+        storeSpriteDimensions();
         loadSprites();
     }
 
@@ -119,7 +119,7 @@ public class SpriteSheet extends Sprite {
      */
     public SpriteSheet(BufferedImage image) {
         super(image);
-        setSpriteDimensions();
+        storeSpriteDimensions();
         loadSprites();
     }
 
@@ -135,9 +135,9 @@ public class SpriteSheet extends Sprite {
      */
     public SpriteSheet(BufferedImage image, int rows, int columns) {
         super(image);
-        setRows(rows);
-        setColumns(columns);
-        setSpriteDimensions();
+        storeRows(rows);
+        storeColumns(columns);
+        storeSpriteDimensions();
         loadSprites();
     }
 
@@ -158,157 +158,172 @@ public class SpriteSheet extends Sprite {
      */
     public SpriteSheet(BufferedImage image, int rows, int columns, int gap) {
         super(image);
-        setRows(rows);
-        setColumns(columns);
-        setGap(gap);
-        setSpriteDimensions();
+        storeRows(rows);
+        storeColumns(columns);
+        storeGap(gap);
+        storeSpriteDimensions();
         loadSprites();
     }
 
     /**
-     * Sets the amount of rows for this {@code SpriteSheet}
-     * if the passed {@code rows} argument is greater than
-     * 0.
+     * Stores the amount of rows for this
+     * {@code SpriteSheet} if the passed
+     * {@code rows} argument is greater than
+     * {@code 0}.
      * 
-     * @param rows the amount of rows for this {@code SpriteSheet}
-     * @see #getRows()
+     * @param rows the amount of rows
+     * for this {@code SpriteSheet}
+     * 
+     * @throws IllegalArgumentException if
+     * the {@code rows} argument is less or
+     * equal to {@code 0}
      */
-    private void setRows(int rows) {
-        if(rows > 0) {
-            this.rows = rows;
+    private void storeRows(int rows) {
+        if(rows <= 0) {
+            throw new IllegalArgumentException (
+                "rows must be greater than 0"
+            );
         }
+        
+        this.rows = rows;
     }
 
     /**
-     * Returns the amount of rows of this {@code SpriteSheet}.
+     * Returns the amount of rows
+     * of this {@code SpriteSheet}.
      * 
-     * @return the amount of rows of this {@code SpriteSheet}
+     * @return the amount of rows
+     * of this {@code SpriteSheet}
      */
     public int getRows() {
         return this.rows;
     }
 
     /**
-     * Sets the amount of columns for this {@code SpriteSheet}
-     * if the passed {@code columns} argument is greater than
-     * 0.
+     * Stores the amount of columns for this
+     * {@code SpriteSheet} if the passed
+     * {@code columns} argument is greater than
+     * {@code 0}.
      * 
-     * @param columns the amount of columns for this {@code SpriteSheet}
-     * @see #getColumns()
+     * @param columns the amount of columns
+     * for this {@code SpriteSheet}
+     * 
+     * @throws IllegalArgumentException if
+     * the {@code columns} argument is less or
+     * equal to {@code 0}
      */
-    private void setColumns(int columns) {
-        if(columns > 0) {
-            this.columns = columns;
+    private void storeColumns(int columns) {
+        if(columns <= 0) {
+            throw new IllegalArgumentException (
+                "columns must be greater than 0"
+            );
         }
+        
+        this.columns = columns;
     }
 
     /**
-     * Returns the amount of columns of this {@code SpriteSheet}.
+     * Returns the amount of columns
+     * of this {@code SpriteSheet}.
      * 
-     * @return the amount of columns of this {@code SpriteSheet}
+     * @return the amount of columns
+     * of this {@code SpriteSheet}
      */
     public int getColumns() {
         return this.columns;
     }
 
     /**
-     * Sets the size of the gap of pixels between each sprite
-     * on this {@code SpriteSheet} image if the passed argument
-     * is greater or equal to 0.
+     * Stores the size of the gap of pixels
+     * between each sprite on this {@code SpriteSheet}
+     * image if the passed argument is greater or
+     * equal to {@code 0}.
      * 
-     * @param gap the distance between each sprite from this
-     *            sprite sheet
-     * @see #getGap()
+     * @param gap the distance between each sprite
+     * from this sprite sheet
+     * 
+     * @throws IllegalArgumentException if the
+     * {@code gap} argument is negative
      */
-    private void setGap(int gap) {
-        if(gap >= 0) {
-            this.gap = gap;
+    private void storeGap(int gap) {
+        if(gap < 0) {
+            throw new IllegalArgumentException (
+                "gap cannot be negative"
+            );
         }
+        
+        this.gap = gap;
     }
 
     /**
-     * Returns the distance in pixels between each sprite
+     * Returns the distance in
+     * pixels between each sprite
      * on this sprite sheet.
      * 
-     * @return the distance between each sprite from this
-     *         sprite sheet
+     * @return the gap between
+     * each sprite from this
+     * sprite sheet
      */
     public int getGap() {
         return this.gap;
     }
 
     /**
-     * Stores the width and height of this {@code SpriteSheet}'s
-     * sprites into the {@code spriteWidth} and {@code spriteHeight}
-     * properties.
-     * 
-     * @see #spriteWidth
-     * @see #spriteHeight
-     */
-    private void setSpriteDimensions() {
-        setSpriteWidth();
-        setSpriteHeight();
-    }
-
-    /**
      * Stores the width of this {@code SpriteSheet}'s
      * sprites into the {@code spriteWidth} property.
-     * 
-     * @see #spriteWidth
-     * @see #getSpriteWidth()
      */
-    private void setSpriteWidth() {
-        spriteWidth = (getWidth() - gap * (columns - 1)) / columns;
+    private void storeSpriteWidth() {
+        this.spriteWidth = (getWidth() - gap * (columns - 1)) / columns;
     }
 
     /**
-     * Returns the width of the sprites of this {@code SpriteSheet}.
+     * Returns the width of the sprites
+     * of this {@code SpriteSheet}.
      * 
-     * @return the width of the sprites of this {@code SpriteSheet}
+     * @return the width of the sprites
+     * of this {@code SpriteSheet}
      */
     public int getSpriteWidth() {
-        return spriteWidth;
+        return this.spriteWidth;
     }
 
     /**
      * Stores the height of this {@code SpriteSheet}'s
      * sprites into the {@code spriteHeight} property.
-     * 
-     * @see #spriteHeight
-     * @see #getSpriteHeight()
      */
-    private void setSpriteHeight() {
-        spriteHeight = (getHeight() - gap * (rows - 1)) / rows;
+    private void storeSpriteHeight() {
+        this.spriteHeight = (getHeight() - gap * (rows - 1)) / rows;
     }
 
     /**
-     * Returns the height of the sprites of this {@code SpriteSheet}.
+     * Returns the height of the sprites
+     * of this {@code SpriteSheet}.
      * 
-     * @return the height of the sprites of this {@code SpriteSheet}
+     * @return the height of the sprites
+     * of this {@code SpriteSheet}
      */
     public int getSpriteHeight() {
-        return spriteHeight;
+        return this.spriteHeight;
     }
 
     /**
-     * Returns a matrix storing this {@code SpriteSheet}'s
-     * loaded {@code Sprite}s.
-     * 
-     * @return this {@code SpriteSheet}'s {@code Sprite}s
+     * Stores the width and height of this
+     * {@code SpriteSheet}'s sprites into
+     * the {@code spriteWidth} and
+     * {@code spriteHeight} properties.
      */
-    public Sprite[][] getSprites() {
-        return sprites;
+    private void storeSpriteDimensions() {
+        storeSpriteWidth();
+        storeSpriteHeight();
     }
 
     /**
-     * Saves each sprite from this sprite sheet into a
-     * {@code Sprite} instance and stores them into the
-     * {@code sprites} property.
-     * 
-     * @see #sprites
+     * Saves each sprite from this sprite sheet
+     * into a {@code Sprite} instance and stores
+     * them into the {@code sprites} property.
      */
     private void loadSprites() {
-        sprites = new Sprite[rows][columns];
+        this.sprites = new Sprite[rows][columns];
 
         for(int i = 0; i < rows; i++) {
             for(int j = 0; j < columns; j++) {
@@ -322,6 +337,18 @@ public class SpriteSheet extends Sprite {
                 );
             }
         }
+    }
+
+    /**
+     * Returns a matrix storing this
+     * {@code SpriteSheet}'s loaded
+     * {@code Sprite}s.
+     * 
+     * @return this {@code SpriteSheet}'s
+     * {@code Sprite}s
+     */
+    public Sprite[][] getSprites() {
+        return this.sprites;
     }
 
 }

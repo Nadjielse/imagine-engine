@@ -19,10 +19,14 @@ public abstract class AnimatableStageElement extends StageElement {
 
     /**
      * Creates a new {@code FrameManager} to
-     * manage the passed {@code SpriteSheet}.
+     * manage the passed {@code SpriteSheet},
+     * which shouldn't be {@code null}.
      * 
      * @param spriteSheet the {@code SpriteSheet}
      * which the {@code frameManager} will manage
+     * 
+     * @throws IllegalArgumentException if the
+     * {@code spriteSheet} argument is {@code null}
      */
     private void createFrameManager(SpriteSheet spriteSheet) {
         this.frameManager = new FrameManager(spriteSheet);

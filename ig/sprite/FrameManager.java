@@ -38,14 +38,17 @@ public class FrameManager {
      */
     private Sprite currentFrame;
 
-    // TODO throw an exception if spriteSheet is null
     /**
      * Creates a {@code FrameManager} instance
      * that will manage the frames of the
-     * passed {@code SpriteSheet}.
+     * passed {@code spriteSheet}, if it isn't
+     * {@code null}.
      * 
      * @param spriteSheet the {@code SpriteSheet}
-     *                    to be managed
+     * to be managed
+     * 
+     * @throws IllegalArgumentException if the
+     * {@code spriteSheet} argument is {@code null}
      */
     public FrameManager(SpriteSheet spriteSheet) {
         storeSpriteSheet(spriteSheet);
@@ -54,14 +57,22 @@ public class FrameManager {
     }
 
     /**
-     * Stores the passed {@code SpriteSheet} into
-     * the {@code spriteSheet} property.
+     * Stores the passed {@code SpriteSheet}, if not
+     * {@code null}, into the {@code spriteSheet} property.
      * 
      * @param spriteSheet the {@code SpriteSheet}
-     *                    that will be managed by this
-     *                    {@code FrameManager}
+     * that will be managed by this {@code FrameManager}
+     * 
+     * @throws IllegalArgumentException if the
+     * {@code spriteSheet} argument is {@code null}
      */
     private void storeSpriteSheet(SpriteSheet spriteSheet) {
+        if(spriteSheet == null) {
+            throw new IllegalArgumentException (
+                "can't handle a null sprite sheet"
+            );
+        }
+
         this.spriteSheet = spriteSheet;
     }
 
@@ -70,7 +81,7 @@ public class FrameManager {
      * managed by this {@code FrameManager}.
      * 
      * @return the {@code spriteSheet} of
-     *         this {@code FrameManager}
+     * this {@code FrameManager}
      */
     public SpriteSheet getSpriteSheet() {
         return this.spriteSheet;
@@ -84,17 +95,22 @@ public class FrameManager {
      * If the passed {@code frameX} is not a column of the
      * {@code spriteSheet} (i.e. is less than {@code 0} or greater
      * than the number of columns of the {@code spriteSheet}
-     * - {@code 1}), then this method won't
-     * do anything.
+     * - {@code 1}), an exception will be thrown.
      * 
-     * @param frameX the column where to get a
-     *               frame from
+     * @param frameX the column where to get a frame from
+     * 
+     * @throws IndexOutOfBoundsException if the {@code frameX} argument
+     * does not correspond to a column of the sprite sheet
      */
     public void setFrameX(int frameX) {
-        if(frameX >= 0 && frameX < spriteSheet.getColumns()) {
-            this.frameX = frameX;
-            updateCurrentFrame();
+        if(frameX < 0 || frameX >= spriteSheet.getColumns()) {
+            throw new IndexOutOfBoundsException (
+                frameX + " does not correspond to a column of the sprite sheet"
+            );
         }
+        
+        this.frameX = frameX;
+        updateCurrentFrame();
     }
 
     /**
@@ -129,7 +145,8 @@ public class FrameManager {
      * {@code spriteSheet} where the
      * current frame is located.
      * 
-     * @return the column of the current frame
+     * @return the column of the
+     * current frame
      */
     public int getFrameX() {
         return this.frameX;
@@ -143,17 +160,22 @@ public class FrameManager {
      * If the passed {@code frameY} is not a row of the
      * {@code spriteSheet} (i.e. is less than {@code 0} or greater
      * than the number of rows of the {@code spriteSheet}
-     * - {@code 1}), then this method won't
-     * do anything.
+     * - {@code 1}), an exception will be thrown.
      * 
-     * @param frameY the row where to get a
-     *               frame from
+     * @param frameY the row where to get a frame from
+     * 
+     * @throws IndexOutOfBoundsException if the {@code frameY} argument
+     * does not correspond to a row of the sprite sheet
      */
     public void setFrameY(int frameY) {
-        if(frameY >= 0 && frameY < spriteSheet.getRows()) {
-            this.frameY = frameY;
-            updateCurrentFrame();
+        if(frameY < 0 || frameY >= spriteSheet.getRows()) {
+            throw new IndexOutOfBoundsException (
+                frameY + " does not correspond to a row of the sprite sheet"
+            );
         }
+        
+        this.frameY = frameY;
+        updateCurrentFrame();
     }
 
     /**
@@ -188,7 +210,8 @@ public class FrameManager {
      * {@code spriteSheet} where the
      * current frame is located.
      * 
-     * @return the row of the current frame
+     * @return the row of the
+     * current frame
      */
     public int getFrameY() {
         return this.frameY;
@@ -207,7 +230,8 @@ public class FrameManager {
      * Returns the current frame selected
      * by this {@code FrameManager}.
      * 
-     * @return the current frame of this {@code FrameManager}
+     * @return the current frame of this
+     * {@code FrameManager}
      */
     public Sprite getCurrentFrame() {
         return this.currentFrame;
