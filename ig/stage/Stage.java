@@ -153,7 +153,9 @@ public abstract class Stage implements GameFluid {
      */
     public void setWidth(int width) {
         if(width < 0) {
-            throw new IllegalArgumentException("width cannot be negative");
+            throw new IllegalArgumentException (
+                "width cannot be negative"
+            );
         }
 
         this.width = width;
@@ -180,7 +182,9 @@ public abstract class Stage implements GameFluid {
      */
     public void setHeight(int height) {
         if(height < 0) {
-            throw new IllegalArgumentException("height cannot be negative");
+            throw new IllegalArgumentException (
+                "height cannot be negative"
+            );
         }
 
         this.height = height;
@@ -240,7 +244,9 @@ public abstract class Stage implements GameFluid {
      */
     public void addFurthestBackground(Scenario background) {
         if(background == null) {
-            throw new IllegalArgumentException("cannot add null background");
+            throw new IllegalArgumentException (
+                "cannot add null background"
+            );
         }
 
         background.setStage(this);
@@ -268,11 +274,13 @@ public abstract class Stage implements GameFluid {
         if(position < 0 || position > backgrounds.size()) {
             throw new IndexOutOfBoundsException (
                 "cannot add background to position " + position +
-                " (Only " + backgrounds.size() + " backgrounds)"
+                " (backgrounds amount is: " + backgrounds.size() + ")"
             );
         }
         if(background == null) {
-            throw new IllegalArgumentException("cannot add null background");
+            throw new IllegalArgumentException (
+                "cannot add null background"
+            );
         }
 
         background.setStage(this);
@@ -291,7 +299,9 @@ public abstract class Stage implements GameFluid {
      */
     public void addClosestBackground(Scenario background) {
         if(background == null) {
-            throw new IllegalArgumentException("cannot add null background");
+            throw new IllegalArgumentException (
+                "cannot add null background"
+            );
         }
 
         background.setStage(this);
@@ -333,14 +343,14 @@ public abstract class Stage implements GameFluid {
      * argument is less than {@code 0} or greater or equal to the
      * amount of backgrounds in this {@code Stage}
      */
-    public Scenario removeNthBackground(int position) {
+    public Scenario removeBackground(int position) {
         if(backgrounds.isEmpty()) {
             return null;
         }
         if(position < 0 || position >= backgrounds.size()) {
             throw new IndexOutOfBoundsException (
-                "cannot remove background in position " + position +
-                " (Only " + backgrounds.size() + " backgrounds)"
+                "position " + position +
+                " does not correspond to any backgrounds"
             );
         }
 
@@ -395,24 +405,19 @@ public abstract class Stage implements GameFluid {
      * camera. It must be a number between {@code 0}
      * and the amount of backgrounds in this
      * {@code Stage} minus {@code 1}.
+     * <p>
+     * If the {@code position} does not correspond to
+     * any backgrounds {@code null} will be returned.
      * 
      * @param position the position of the
      * background to get
      * 
      * @return the background specified by the
      * {@code position} argument
-     * 
-     * @throws IndexOutOfBoundsException if the
-     * {@code position} argument is less than {@code 0}
-     * or greater or equal to the amount of backgrounds
-     * in this {@code Stage}
      */
     public Scenario getBackground(int position) {
         if(position < 0 || position >= backgrounds.size()) {
-            throw new IndexOutOfBoundsException (
-                "cannot get background in position " + position +
-                " (Only " + backgrounds.size() + " backgrounds)"
-            );
+            return null;
         }
 
         return backgrounds.get(position);
@@ -420,9 +425,13 @@ public abstract class Stage implements GameFluid {
 
     /**
      * Adds a {@code GameObject} to the
-     * objects of this {@code Stage} if
-     * the {@code object} argument isn't
-     * {@code null}.
+     * end of the list of objects of this
+     * {@code Stage}. This object will be
+     * the last to be updated and drawn
+     * each frame of the game.
+     * <p>
+     * The {@code object} argument cannot
+     * be null.
      * 
      * @param object the {@code GameObject}
      * to be added
@@ -431,8 +440,30 @@ public abstract class Stage implements GameFluid {
      * {@code object} argument is {@code null}
      */
     public void addObject(GameObject object) {
+        addLastObject(object);
+    }
+
+    /**
+     * Adds a {@code GameObject} to the
+     * end of the list of objects of this
+     * {@code Stage}. This object will be
+     * the last to be updated and drawn
+     * each frame of the game.
+     * <p>
+     * The {@code object} argument cannot
+     * be null.
+     * 
+     * @param object the {@code GameObject}
+     * to be added
+     * 
+     * @throws IllegalArgumentException if the
+     * {@code object} argument is {@code null}
+     */
+    public void addLastObject(GameObject object) {
         if(object == null) {
-            throw new IllegalArgumentException("cannot add null object");
+            throw new IllegalArgumentException (
+                "cannot add null object"
+            );
         }
 
         object.setStage(this);
@@ -440,17 +471,105 @@ public abstract class Stage implements GameFluid {
     }
 
     /**
-     * Removes the specified {@code GameObject}
-     * of this {@code Stage} if it is present.
+     * Adds a {@code GameObject} to the specified {@code position}
+     * in the list of objects of this {@code Stage} if the
+     * {@code position} isn't invalid
+     * ({@code position < 0 || position > objects.size()})
+     * and the {@code object} isn't {@code null}.
      * 
-     * @param object the {@code GameObject} to
-     * be removed
+     * @param position the position where to add the {@code object}
+     * @param object the {@code GameObject} to be added
+     * 
+     * @throws IndexOutOfBoundsException if the {@code position}
+     * is invalid
+     * @throws IllegalArgumentException if the {@code object}
+     * is {@code null}
+     */
+    public void addNthObject(int position, GameObject object) {
+        if(position < 0 || position > objects.size()) {
+            throw new IndexOutOfBoundsException (
+                "cannot add object to position " + position +
+                " (objects amount is: " + objects.size() + ")"
+            );
+        }
+        if(object == null) {
+            throw new IllegalArgumentException (
+                "cannot add null object"
+            );
+        }
+
+        object.setStage(this);
+        objects.add(position, object);
+    }
+
+    /**
+     * Adds a {@code GameObject} to the
+     * beginning of the list of objects of this
+     * {@code Stage}. This object will be
+     * the first to be updated and drawn
+     * each frame of the game.
+     * <p>
+     * The {@code object} argument cannot
+     * be null.
+     * 
+     * @param object the {@code GameObject}
+     * to be added
+     * 
+     * @throws IllegalArgumentException if the
+     * {@code object} argument is {@code null}
+     */
+    public void addFirstObject(GameObject object) {
+        if(object == null) {
+            throw new IllegalArgumentException (
+                "cannot add null object"
+            );
+        }
+        
+        object.setStage(this);
+        objects.add(0, object);
+    }
+
+    /**
+     * Removes and returns the last
+     * {@code GameObject} of the list of
+     * objects of this {@code Stage} if
+     * there are any.
+     * 
+     * @return the removed {@code GameObject}
+     */
+    public GameObject removeLastObject() {
+        if(objects.isEmpty()) {
+            return null;
+        }
+
+        GameObject removedObject = objects.remove(objects.size() - 1);
+        removedObject.setStage(null);
+        return removedObject;
+    }
+
+    /**
+     * Removes and returns from the objects of this
+     * {@code Stage}, if there are any, the {@code GameObject}
+     * specified by the {@code position} position.
+     * If the {@code position} does not correspond
+     * to any object of this {@code Stage}
+     * ({@code position < 0 || position >= objects.size()}),
+     * an exception is thrown.
+     * 
+     * @param position the position where to remove a
+     * {@code GameObject} from
+     * 
+     * @throws IndexOutOfBoundsException if the position does
+     * not correspond to any object
      */
     public GameObject removeObject(int position) {
+        if(objects.isEmpty()) {
+            return null;
+        }
         if(position < 0 || position >= objects.size()) {
             throw new IndexOutOfBoundsException (
-                "cannot remove object from position " + position +
-                " (Only " + objects.size() + " objects)"
+                "position " + position +
+                " does not correspond to any object"
             );
         }
 
@@ -461,7 +580,7 @@ public abstract class Stage implements GameFluid {
 
     /**
      * Removes the specified {@code GameObject}
-     * of this {@code Stage} if it is present.
+     * from this {@code Stage}, if it is present.
      * 
      * @param object the {@code GameObject} to
      * be removed
@@ -470,6 +589,24 @@ public abstract class Stage implements GameFluid {
         if(objects.remove(object)) {
             object.setStage(null);
         }
+    }
+
+    /**
+     * Removes and returns the first
+     * {@code GameObject} from the list of
+     * objects of this {@code Stage}, if
+     * there are any.
+     * 
+     * @return the removed {@code GameObject}
+     */
+    public GameObject removeFirstObject() {
+        if(objects.isEmpty()) {
+            return null;
+        }
+
+        GameObject removedObject = objects.remove(0);
+        removedObject.setStage(null);
+        return removedObject;
     }
 
     /**
@@ -484,7 +621,8 @@ public abstract class Stage implements GameFluid {
 
     /**
      * Returns the {@code GameObject} specified
-     * by the {@code position} argument.
+     * by the {@code position} argument, if it
+     * exists, else, returns {@code null}.
      * 
      * @param position the position where to
      * get the object from
@@ -494,10 +632,7 @@ public abstract class Stage implements GameFluid {
      */
     public GameObject getObject(int position) {
         if(position < 0 || position >= objects.size()) {
-            throw new IndexOutOfBoundsException (
-                "cannot get object from position " + position +
-                " (Only " + objects.size() + " objects)"
-            );
+            return null;
         }
 
         return objects.get(position);
@@ -531,7 +666,9 @@ public abstract class Stage implements GameFluid {
      */
     public void addFurthestForeground(Scenario foreground) {
         if(foreground == null) {
-            throw new IllegalArgumentException("cannot add null foreground");
+            throw new IllegalArgumentException (
+                "cannot add null foreground"
+            );
         }
 
         foreground.setStage(this);
@@ -559,11 +696,13 @@ public abstract class Stage implements GameFluid {
         if(position < 0 || position > foregrounds.size()) {
             throw new IndexOutOfBoundsException (
                 "cannot add foreground to position " + position +
-                " (Only " + foregrounds.size() + " foregrounds)"
+                " (foregrounds amount is " + foregrounds.size() + ")"
             );
         }
         if(foreground == null) {
-            throw new IllegalArgumentException("cannot add null foreground");
+            throw new IllegalArgumentException (
+                "cannot add null foreground"
+            );
         }
 
         foreground.setStage(this);
@@ -582,7 +721,9 @@ public abstract class Stage implements GameFluid {
      */
     public void addClosestForeground(Scenario foreground) {
         if(foreground == null) {
-            throw new IllegalArgumentException("cannot add null foreground");
+            throw new IllegalArgumentException (
+                "cannot add null foreground"
+            );
         }
 
         foreground.setStage(this);
@@ -624,14 +765,14 @@ public abstract class Stage implements GameFluid {
      * argument is less than {@code 0} or greater or equal to the
      * amount of foregrounds in this {@code Stage}
      */
-    public Scenario removeNthForeground(int position) {
+    public Scenario removeForeground(int position) {
         if(foregrounds.isEmpty()) {
             return null;
         }
         if(position < 0 || position >= foregrounds.size()) {
             throw new IndexOutOfBoundsException (
-                "cannot remove foreground in position " + position +
-                " (Only " + foregrounds.size() + " foregrounds)"
+                "position " + position +
+                " does not correspond to any foregrounds"
             );
         }
 
@@ -686,24 +827,19 @@ public abstract class Stage implements GameFluid {
      * camera. It must be a number between {@code 0}
      * and the amount of foregrounds in this
      * {@code Stage} minus {@code 1}.
+     * <p>
+     * If the {@code position} does not correspond to
+     * any foregrounds {@code null} will be returned.
      * 
      * @param position the position of the
      * foreground to get
      * 
      * @return the foreground specified by the
      * {@code position} argument
-     * 
-     * @throws IndexOutOfBoundsException if the
-     * {@code position} argument is less than {@code 0}
-     * or greater or equal to the amount of foregrounds
-     * in this {@code Stage}
      */
     public Scenario getForeground(int position) {
         if(position < 0 || position >= foregrounds.size()) {
-            throw new IndexOutOfBoundsException (
-                "cannot get foreground in position " + position +
-                " (Only " + foregrounds.size() + " foregrounds)"
-            );
+            return null;
         }
 
         return foregrounds.get(position);
