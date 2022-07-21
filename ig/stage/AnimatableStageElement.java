@@ -17,8 +17,6 @@ public abstract class AnimatableStageElement extends StageElement {
      */
     private FrameManager frameManager;
 
-
-
     /**
      * Creates a new {@code FrameManager} to
      * manage the passed {@code SpriteSheet}.

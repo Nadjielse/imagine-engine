@@ -31,7 +31,7 @@ public class Sprite {
      * @param path the path to where the sprite image is
      */
     public Sprite(String path) {
-        setPath(path);
+        storePath(path);
         load();
     }
     
@@ -42,15 +42,25 @@ public class Sprite {
      * @param image the image of the new sprite
      */
     public Sprite(BufferedImage image) {
-        setImage(image);
+        storeImage(image);
     }
 
     /**
-     * Sets the {@code path} of this sprite's image.
+     * Stores the {@code path}, if it isn't
+     * {@code null}, of this sprite's image.
      * 
      * @param path the new path for this sprite
+     * 
+     * @throws IllegalArgumentException if the
+     * {@code path} argument is {@code null}
      */
-    private void setPath(String path) {
+    private void storePath(String path) {
+        if(path == null) {
+            throw new IllegalArgumentException (
+                "cannot store null path"
+            );
+        }
+
         this.path = path;
     }
     
@@ -68,11 +78,21 @@ public class Sprite {
     }
 
     /**
-     * Sets the image to be used in this sprite.
+     * Stores the image {@code img}, if it isn't
+     * {@code null}, to be used in this sprite.
      * 
      * @param img this sprite's image
+     * 
+     * @throws IllegalArgumentException if the
+     * {@code img} argument is {@code null}
      */
-    private void setImage(BufferedImage img) {
+    private void storeImage(BufferedImage img) {
+        if(img == null) {
+            throw new IllegalArgumentException (
+                "cannot store null image"
+            );
+        }
+
         this.img = img;
     }
     
